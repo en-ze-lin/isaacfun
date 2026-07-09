@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+
+  "//": "Static site. Each project lives in /projects/<slug>/index.html and is",
+  "//1": "reachable at /projects/<slug>. When you move to isaacfun.xyz, add the",
+  "//2": "domain in the Vercel dashboard (Settings > Domains). To give a project",
+  "//3": "its own subdomain (e.g. waveform.isaacfun.xyz), add a rewrite below and",
+  "//4": "point a CNAME for that subdomain at cname.vercel-dns.com.",
+
+  "rewrites": []
+}

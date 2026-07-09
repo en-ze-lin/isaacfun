@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Isaac Fun</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header id="header">
+    <a class="brand" href="#/about">
+      <!-- Front logo: change the background-image in styles.css (.brand-logo)
+           or set it inline here to your captured snapshot. -->
+      <span class="brand-logo"></span>
+      <span class="brand-text"><span class="brand-name">isaacfun</span><span class="accent">.xyz</span></span>
+    </a>
+
+    <nav class="links" id="nav"></nav>
+
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu"></div>
+
+  <main id="app"></main>
+
+  <footer>© <span id="year"></span> Isaac Fun — a portfolio of tools, concepts, and ideas.</footer>
+
+<script src="projects.js"></script>
+<script>
+  // NAV order = the pages in the top bar.
+  const NAV = ["about", "tools", "concepts", "ideas"];
+  const SITE = window.SITE || {};
+
+  const app        = document.getElementById("app");
+  const nav        = document.getElementById("nav");
+  const mobileMenu = document.getElementById("mobileMenu");
+  const hamburger  = document.getElementById("hamburger");
+  const header     = document.getElementById("header");
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const initials = (t) => (t.split(" ").map(w => w[0]).join("").slice(0, 2) || "·").toUpperCase();
+
+  // ----- Nav (desktop + mobile share the same links) -----
+  function renderNav(current) {
+    const html = NAV.map((name) => {
+      const active = name === current ? " active" : "";
+      return '<a class="' + active.trim() + '" href="#/' + name + '">' + name + "</a>";
+    }).join("");
+    nav.innerHTML = html;
+    mobileMenu.innerHTML = html;
+  }
+
+  // ----- About -----
+  function renderAbout() {
+    const paras = (SITE.about || []).map((p) => "<p>" + p + "</p>").join("");
+    return (
+      '<h1 class="page-title">About</h1>' +
+      '<p class="page-sub">A little context.</p>' +
+      '<div class="about">' + paras + "</div>"
+    );
+  }
+
+  // ----- A collection page (tools / concepts / ideas) -----
+  function renderCollection(name) {
+    const items = SITE[name] || [];
+    const cards = items.map((item) => {
+      const logo = item.image
+        ? '<div class="logo" style="background-image:url(\'' + item.image + '\')"></div>'
+        : '<div class="logo">' + initials(item.title) + "</div>";
+      // If the project has its own page (uploaded via the skill), open it
+      // directly; otherwise route to the in-site detail stub.
+      const href = item.url ? item.url : ("#/" + name + "/" + item.slug);
+      return (
+        '<a class="card" href="' + href + '">' +
+          logo +
+          '<div class="body">' +
+            '<div class="title">' + item.title + "</div>" +
+            '<div class="desc">' + item.description + "</div>" +
+          "</div>" +
+        "</a>"
+      );
+    }).join("");
+    return (
+      '<h1 class="page-title">' + cap(name) + "</h1>" +
+      '<p class="page-sub">Select a project to open its page.</p>' +
+      '<div class="grid">' + cards + "</div>"
+    );
+  }
+
+  // ----- A single project page -----
+  function renderProject(name, slug) {
+    const item = (SITE[name] || []).find((i) => i.slug === slug);
+    if (!item) return renderCollection(name);
+    return (
+      '<p class="page-sub" style="margin-bottom:12px;">' +
+        '<a href="#/' + name + '" style="color:var(--accent);text-decoration:none;">&larr; ' +
+        cap(name) + "</a></p>" +
+      '<h1 class="page-title">' + item.title + "</h1>" +
+      '<p class="page-sub">' + item.description + "</p>" +
+      '<div class="about"><p>This project lives at ' +
+        '<code>projects/' + item.slug + "/</code>. " +
+        "Open it there, or replace this page with the project itself.</p></div>"
+    );
+  }
+
+  // ----- Router -----
+  function route() {
+    closeMenu();
+    const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+    const section = parts[0] || "about";
+    renderNav(NAV.indexOf(section) >= 0 ? section : "");
+
+    if (section === "about" || !SITE[section]) {
+      app.innerHTML = renderAbout();
+    } else if (parts[1]) {
+      app.innerHTML = renderProject(section, parts[1]);
+    } else {
+      app.innerHTML = renderCollection(section);
+    }
+    window.scrollTo(0, 0);
+  }
+
+  // ----- Mobile menu + scroll-collapse -----
+  function openMenu()  { mobileMenu.classList.add("open"); }
+  function closeMenu() { mobileMenu.classList.remove("open"); }
+  hamburger.addEventListener("click", () => mobileMenu.classList.toggle("open"));
+
+  // On scroll down, condense the header to just the hamburger button.
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 40) header.classList.add("scrolled");
+    else header.classList.remove("scrolled");
+  });
+
+  window.addEventListener("hashchange", route);
+  if (!location.hash) location.hash = "#/about";
+  route();
+</script>
+</body>
+</html>
