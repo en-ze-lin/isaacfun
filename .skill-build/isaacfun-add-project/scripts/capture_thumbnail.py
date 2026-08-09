@@ -58,14 +58,14 @@ def extract_title(html_path: Path) -> str:
 
 
 def generate_svg(html_path: Path, out_svg: Path) -> None:
-    """Themed monogram matching the site: orange mark on dark slate."""
+    """Themed monogram matching the site: black mark on light gray paper."""
     title = extract_title(html_path) or html_path.parent.name.replace("-", " ").title()
     initials = "".join(w[0] for w in title.split() if w)[:2].upper() or "·"
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}">
-  <rect width="{SIZE}" height="{SIZE}" fill="#262d37"/>
-  <rect x="0" y="0" width="8" height="{SIZE}" fill="#ff6a1f"/>
+  <rect width="{SIZE}" height="{SIZE}" fill="#ababab"/>
+  <rect x="0" y="0" width="{SIZE}" height="{SIZE}" fill="none" stroke="#333" stroke-width="2"/>
   <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central"
-        fill="#ff6a1f" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        fill="#141414" font-family="Courier Prime, Courier New, Courier, monospace"
         font-size="240" font-weight="700">{initials}</text>
 </svg>
 """

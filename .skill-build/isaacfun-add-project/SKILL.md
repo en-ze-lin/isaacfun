@@ -23,9 +23,10 @@ appending an entry there. Everything else (folder, thumbnail, navbar) is bookkee
   Locate it before doing anything; do not hardcode a path. If you can't find it,
   ask the user where the site lives and stop.
 - Sections are `tools`, `concepts`, and `ideas`. `about` is prose, not projects.
-- Theme: dark slate + gray + orange, Helvetica Neue, minimal rounding. Anything
-  you generate (descriptions, fallback thumbnails) must fit that quiet tone —
-  no marketing words like "powerful" or "amazing".
+- Theme: light-gray "paper", black text, Courier Prime (typewriter) monospace,
+  square corners, no color accents, everything centered. Anything you generate
+  (descriptions, fallback thumbnails) must fit that quiet, print-like tone — no
+  marketing words like "powerful" or "amazing".
 
 ## What you'll be given
 

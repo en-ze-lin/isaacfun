@@ -3,77 +3,95 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Isaac Fun</title>
+<title>isaacfun.xyz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header id="header">
-    <a class="brand" href="#/about">
-      <!-- Front logo: change the background-image in styles.css (.brand-logo)
-           or set it inline here to your captured snapshot. -->
-      <span class="brand-logo"></span>
-      <span class="brand-text"><span class="brand-name">isaacfun</span><span class="accent">.xyz</span></span>
-    </a>
+  <main id="main">
+    <!-- Masthead. On home it's the whole menu; elsewhere just the title,
+         pinned top-left as a home button. -->
+    <header class="masthead">
+      <a class="site-title" href="#/home">isaacfun.xyz</a>
+      <nav class="index" id="index"></nav>
+    </header>
 
-    <nav class="links" id="nav"></nav>
+    <section id="app"></section>
+  </main>
 
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </header>
-
-  <div class="mobile-menu" id="mobileMenu"></div>
-
-  <main id="app"></main>
-
-  <footer>© <span id="year"></span> Isaac Fun — a portfolio of tools, concepts, and ideas.</footer>
+  <footer id="footer">© <span id="year"></span> isaacfun.xyz</footer>
 
 <script src="projects.js"></script>
 <script>
-  // NAV order = the pages in the top bar.
-  const NAV = ["about", "tools", "concepts", "ideas"];
+  // The home menu is defined in projects.js (window.MENU) so you can edit
+  // labels/order there without touching this file. Fallback kept just in case.
+  const PAGES = window.MENU || [
+    { slug: "about", label: "ABOUT" }, { slug: "tools", label: "USE" },
+    { slug: "concepts", label: "REMIX" }, { slug: "ideas", label: "ENJOY" },
+    { slug: "read", label: "READ" }
+  ];
+  const LABELS = Object.fromEntries(PAGES.map((p) => [p.slug, p.label]));
   const SITE = window.SITE || {};
 
-  const app        = document.getElementById("app");
-  const nav        = document.getElementById("nav");
-  const mobileMenu = document.getElementById("mobileMenu");
-  const hamburger  = document.getElementById("hamburger");
-  const header     = document.getElementById("header");
+  const main  = document.getElementById("main");
+  const app   = document.getElementById("app");
+  const index = document.getElementById("index");
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   const initials = (t) => (t.split(" ").map(w => w[0]).join("").slice(0, 2) || "·").toUpperCase();
+  const heading = (slug) => (LABELS[slug] || slug).toLowerCase();
 
-  // ----- Nav (desktop + mobile share the same links) -----
-  function renderNav(current) {
-    const html = NAV.map((name) => {
-      const active = name === current ? " active" : "";
-      return '<a class="' + active.trim() + '" href="#/' + name + '">' + name + "</a>";
+  // Deterministic "missing letter" for the home menu (desktop reveals it on
+  // hover). Same word -> same hidden position every time (not randomized).
+  function hashOf(s) {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return h;
+  }
+  function mask(label, blanks) {
+    blanks = blanks || 1;
+    if (label.length < 2) return label;
+    // Candidate positions (never the first letter), ordered deterministically.
+    const pos = [];
+    for (let i = 1; i < label.length; i++) pos.push(i);
+    pos.sort((a, b) => hashOf(label + "#" + a) - hashOf(label + "#" + b));
+    const hide = new Set(pos.slice(0, Math.min(blanks, pos.length)));
+    let out = "";
+    for (let i = 0; i < label.length; i++) out += hide.has(i) ? "_" : label[i];
+    return out;
+  }
+
+  // ----- The numbered index (home only) -----
+  function renderIndex(current) {
+    index.innerHTML = PAGES.map((p, i) => {
+      const num = String(i + 1).padStart(2, "0");
+      const active = p.slug === current ? " active" : "";
+      return '<a class="idx-link' + active + '" href="#/' + p.slug + '">' +
+               '<span class="n">' + num + '</span>' +
+               '<span class="t">' +
+                 '<span class="masked">' + (p.masked || mask(p.label, p.blanks)) + '</span>' +
+                 '<span class="full">' + p.label + '</span>' +
+               '</span>' +
+             "</a>";
     }).join("");
-    nav.innerHTML = html;
-    mobileMenu.innerHTML = html;
   }
 
   // ----- About -----
   function renderAbout() {
     const paras = (SITE.about || []).map((p) => "<p>" + p + "</p>").join("");
-    return (
-      '<h1 class="page-title">About</h1>' +
-      '<p class="page-sub">A little context.</p>' +
-      '<div class="about">' + paras + "</div>"
-    );
+    return '<h1 class="page-title">' + heading("about") + '</h1><div class="about">' + paras + "</div>";
   }
 
-  // ----- A collection page (tools / concepts / ideas) -----
-  function renderCollection(name) {
-    const items = SITE[name] || [];
+  // ----- Collection (tools / concepts / ideas / read) -----
+  function renderCollection(slug) {
+    const items = SITE[slug] || [];
     const cards = items.map((item) => {
       const logo = item.image
         ? '<div class="logo" style="background-image:url(\'' + item.image + '\')"></div>'
         : '<div class="logo">' + initials(item.title) + "</div>";
-      // If the project has its own page (uploaded via the skill), open it
-      // directly; otherwise route to the in-site detail stub.
-      const href = item.url ? item.url : ("#/" + name + "/" + item.slug);
+      const href = item.url ? item.url : ("#/" + slug + "/" + item.slug);
       return (
         '<a class="card" href="' + href + '">' +
           logo +
@@ -84,59 +102,47 @@
         "</a>"
       );
     }).join("");
-    return (
-      '<h1 class="page-title">' + cap(name) + "</h1>" +
-      '<p class="page-sub">Select a project to open its page.</p>' +
-      '<div class="grid">' + cards + "</div>"
-    );
+    const body = items.length
+      ? '<div class="grid">' + cards + "</div>"
+      : '<p class="empty">nothing here yet.</p>';
+    return '<h1 class="page-title">' + heading(slug) + "</h1>" + body;
   }
 
-  // ----- A single project page -----
-  function renderProject(name, slug) {
-    const item = (SITE[name] || []).find((i) => i.slug === slug);
-    if (!item) return renderCollection(name);
+  // ----- Single project stub -----
+  function renderProject(slug, itemSlug) {
+    const item = (SITE[slug] || []).find((i) => i.slug === itemSlug);
+    if (!item) return renderCollection(slug);
     return (
-      '<p class="page-sub" style="margin-bottom:12px;">' +
-        '<a href="#/' + name + '" style="color:var(--accent);text-decoration:none;">&larr; ' +
-        cap(name) + "</a></p>" +
       '<h1 class="page-title">' + item.title + "</h1>" +
-      '<p class="page-sub">' + item.description + "</p>" +
-      '<div class="about"><p>This project lives at ' +
-        '<code>projects/' + item.slug + "/</code>. " +
-        "Open it there, or replace this page with the project itself.</p></div>"
+      '<div class="about"><p>' + item.description + "</p>" +
+      '<p>this project lives at <code>projects/' + item.slug + "/</code></p></div>" +
+      '<p class="back"><a href="#/' + slug + '">&larr; ' + heading(slug) + "</a></p>"
     );
   }
 
   // ----- Router -----
   function route() {
-    closeMenu();
     const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
-    const section = parts[0] || "about";
-    renderNav(NAV.indexOf(section) >= 0 ? section : "");
+    const slug = parts[0] || "home";
+    renderIndex(slug);
 
-    if (section === "about" || !SITE[section]) {
+    const isHome = slug === "home";
+    main.classList.toggle("is-home", isHome);
+
+    if (isHome) {
+      app.innerHTML = "";
+    } else if (slug === "about") {
       app.innerHTML = renderAbout();
-    } else if (parts[1]) {
-      app.innerHTML = renderProject(section, parts[1]);
+    } else if (SITE[slug]) {
+      app.innerHTML = parts[1] ? renderProject(slug, parts[1]) : renderCollection(slug);
     } else {
-      app.innerHTML = renderCollection(section);
+      app.innerHTML = renderAbout();
     }
     window.scrollTo(0, 0);
   }
 
-  // ----- Mobile menu + scroll-collapse -----
-  function openMenu()  { mobileMenu.classList.add("open"); }
-  function closeMenu() { mobileMenu.classList.remove("open"); }
-  hamburger.addEventListener("click", () => mobileMenu.classList.toggle("open"));
-
-  // On scroll down, condense the header to just the hamburger button.
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 40) header.classList.add("scrolled");
-    else header.classList.remove("scrolled");
-  });
-
   window.addEventListener("hashchange", route);
-  if (!location.hash) location.hash = "#/about";
+  if (!location.hash) location.hash = "#/home";
   route();
 </script>
 </body>

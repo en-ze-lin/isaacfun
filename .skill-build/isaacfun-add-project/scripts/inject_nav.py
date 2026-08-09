@@ -22,51 +22,32 @@ from pathlib import Path
 MARK_OPEN = "<!-- isaacfun-nav:start -->"
 MARK_CLOSE = "<!-- isaacfun-nav:end -->"
 
-# Glassy navbar matching the main site (styles.css). Inline-styled so it
-# does not depend on the project bringing in the site's stylesheet.
-_LINK = ("color:#9aa6b4;text-decoration:none;font-size:13px;font-weight:500;"
-         "letter-spacing:.4px;text-transform:uppercase;padding:9px 16px;"
-         "border-radius:5px;")
-
-# Prominent back-to-section button (orange, outlined).
-_BACK = ("display:inline-flex;align-items:center;gap:7px;color:#ff6a1f;"
-         "text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.4px;"
-         "text-transform:uppercase;padding:9px 15px;border-radius:5px;"
-         "border:1px solid rgba(255,106,31,.45);background:rgba(255,106,31,.08);")
-
 SECTIONS = ("tools", "concepts", "ideas")
 
 
 def build_nav(section: str | None = None) -> str:
+    """A minimal typewriter text link fixed to the top-left of the page.
+
+    No menu/drawer — just plain links back to the site, matching the main
+    site's paper/monospace look. Self-contained inline styles.
+    """
+    _base = ("color:#141414;text-decoration:none;font-size:14px;")
     back = ""
     if section in SECTIONS:
-        label = section.capitalize()
-        back = (f'\n    <a href="../../index.html#/{section}" style="{_BACK}">'
-                f'&larr; {label}</a>')
+        back = (f'<a href="../../index.html#/{section}" '
+                f'style="{_base}" '
+                f'onmouseover="this.style.textDecoration=\'underline\'" '
+                f'onmouseout="this.style.textDecoration=\'none\'">&larr; {section}</a>')
+
     return f"""{MARK_OPEN}
-<nav style="position:sticky;top:0;z-index:9999;height:66px;display:flex;
-align-items:center;justify-content:space-between;
-padding:0 clamp(20px,4vw,52px);
-background:rgba(23,27,33,0.55);
--webkit-backdrop-filter:blur(16px) saturate(130%);
-backdrop-filter:blur(16px) saturate(130%);
-border-bottom:1px solid rgba(255,255,255,0.09);
-font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <span style="display:flex;align-items:center;gap:14px;">
-    <a href="../../index.html" style="display:flex;align-items:center;gap:11px;
-       color:#f4f6f8;text-decoration:none;font-size:19px;font-weight:700;letter-spacing:.3px;">
-      <span style="width:30px;height:30px;border-radius:5px;
-        background:linear-gradient(140deg,#ff6a1f,#ff8f4d);
-        box-shadow:0 2px 10px rgba(255,106,31,.35),inset 0 1px 0 rgba(255,255,255,.25);"></span>
-      <span>isaacfun<span style="color:#ff6a1f;">.xyz</span></span>
-    </a>{back}
-  </span>
-  <span style="display:flex;gap:4px;align-items:center;">
-    <a href="../../index.html#/about"    style="{_LINK}">About</a>
-    <a href="../../index.html#/tools"    style="{_LINK}">Tools</a>
-    <a href="../../index.html#/concepts" style="{_LINK}">Concepts</a>
-    <a href="../../index.html#/ideas"    style="{_LINK}">Ideas</a>
-  </span>
+<nav style="position:fixed;top:0;left:0;z-index:2147483000;display:flex;gap:16px;
+align-items:center;padding:8px 12px;background:rgba(201,201,201,0.92);
+border-right:1px solid #333;border-bottom:1px solid #333;
+font-family:'Courier Prime','Courier New',Courier,monospace;">
+  <a href="../../index.html" style="{_base}font-weight:700;"
+     onmouseover="this.style.textDecoration='underline'"
+     onmouseout="this.style.textDecoration='none'">isaacfun.xyz</a>
+  {back}
 </nav>
 {MARK_CLOSE}"""
 
