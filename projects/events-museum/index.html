@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore Roblox event history from 2007 to 2015 in The Unofficial Events Museum, with 2016–2026 coming soon.">
+  <title>The Unofficial Events Museum</title>
+  <style>
+    :root {
+      --ink: #171613;
+      --paper: #f3f1e8;
+      --paper-light: #ffffff;
+      --gold: #ffe600;
+      --gold-bright: #fff200;
+      --oxblood: #111111;
+      --muted: #71695d;
+      --line: rgba(255, 230, 0, .48);
+      --serif: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 8%, rgba(255,255,255,.7), transparent 28rem),
+        repeating-linear-gradient(0deg, rgba(80,60,30,.018) 0 1px, transparent 1px 4px),
+        var(--paper);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+    .wrap { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(18, 17, 14, .96);
+      color: #f7f0e1;
+      border-bottom: 1px solid rgba(240,211,84,.38);
+      backdrop-filter: blur(14px);
+    }
+    .nav { min-height: 72px; display: flex; align-items: center; gap: 28px; }
+    .brand { display: flex; align-items: center; gap: 12px; margin-right: auto; text-decoration: none; }
+    .brand-icon { width: 44px; height: 44px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,242,0,.65); }
+    .brand span { color: #fff200; font-family: var(--sans); font-size: 17px; letter-spacing: .025em; }
+    nav { display: flex; align-items: center; gap: 25px; }
+    nav a { text-decoration: none; font-family: var(--sans); font-size: 15px; }
+    nav a:hover { color: #fff200; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px; border: 1px solid var(--gold); text-decoration: none; font-family: var(--sans); transition: .2s ease; }
+    .button:hover { transform: translateY(-2px); box-shadow: 0 9px 20px rgba(30,20,10,.14); }
+    .button.primary { background: #111; color: #fff200; }
+    .button.ghost { background: rgba(255,255,255,.48); }
+    .menu { display: none; border: 0; background: transparent; color: white; font-size: 24px; }
+
+    .hero { padding: 48px 0 30px; }
+    .hero-grid { display: grid; grid-template-columns: .85fr 1.45fr; gap: 46px; align-items: center; }
+    .eyebrow { color: var(--oxblood); text-transform: uppercase; letter-spacing: .16em; font-weight: 700; font-size: 12px; }
+    h1, h2, h3 { font-family: var(--sans); font-weight: 400; line-height: 1.03; }
+    h1 { margin: 12px 0 22px; font-size: clamp(54px, 6vw, 84px); }
+    h2 { margin: 0 0 18px; font-size: clamp(38px, 4.3vw, 61px); font-weight: 600; letter-spacing: -.025em; }
+    h3 { font-weight: 600; letter-spacing: -.015em; }
+    h3 { font-size: 28px; color: var(--oxblood); }
+    h1 { font-family: var(--sans); font-weight: 500; letter-spacing: -.035em; }
+    .hero p { max-width: 570px; font-size: 17px; color: #3d3932; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .hero-visual { position: relative; padding: 0 0 22px 70px; }
+    .frame { position: relative; padding: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,.35); box-shadow: 0 25px 55px rgba(35,25,12,.17); }
+    .frame::before, .frame::after { content: ""; position: absolute; width: 19px; height: 19px; border-color: var(--gold); }
+    .frame::before { top: 2px; left: 2px; border-top: 2px solid; border-left: 2px solid; }
+    .frame::after { right: 2px; bottom: 2px; border-right: 2px solid; border-bottom: 2px solid; }
+    .hero-image { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+    .guide {
+      position: absolute; z-index: 3; left: -40px; bottom: 0;
+      width: clamp(175px, 24vw, 300px);
+      filter: drop-shadow(0 18px 18px rgba(20,14,7,.36));
+      animation: greeting 3.8s ease-in-out infinite;
+      transform-origin: 45% 78%;
+    }
+    .guide-label {
+      position: absolute; z-index: 4; left: 18px; bottom: 20px;
+      padding: 10px 16px; background: rgba(22,21,17,.93); color: white;
+      border: 1px solid var(--gold); font-family: var(--sans); font-size: 16px;
+    }
+    .guide-label small { display: block; color: #fff200; font: 10px var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+
+    .timeline-band { background: #171713; color: white; border-block: 1px solid var(--gold); }
+    .timeline-inner { display: grid; grid-template-columns: auto 1px 1fr auto; gap: 30px; align-items: center; padding: 25px 0; }
+    .years { font: 700 48px/1 var(--sans); color: #fff200; white-space: nowrap; }
+    .vline { width: 1px; height: 55px; background: var(--gold); }
+    .timeline-inner p { margin: 0; max-width: 460px; color: #eee6d8; }
+    .seal { color: #fff200; font: 700 34px var(--sans); }
+
+    section { padding: 82px 0; }
+    .intro { display: grid; grid-template-columns: .8fr 1.4fr; gap: 70px; align-items: end; margin-bottom: 36px; }
+    .intro p { margin: 0; font-size: 19px; max-width: 700px; }
+    .rule { width: 150px; height: 1px; background: var(--gold); position: relative; }
+    .rule::after { content: "◆"; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-53%); color: var(--gold); background: var(--paper); padding: 0 8px; font-size: 9px; }
+
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .card { border: 1px solid var(--gold); background: rgba(255,255,255,.46); text-align: center; overflow: hidden; }
+    .card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+    .card-body { padding: 0 24px 24px; }
+    .card h3 { margin: 23px 0 13px; }
+    .card p { margin: 0; }
+
+    .living { display: grid; grid-template-columns: 1.35fr .95fr; background: #191916; color: white; border: 1px solid var(--gold); }
+    .living img { width: 100%; height: 100%; min-height: 400px; object-fit: cover; }
+    .living-copy { padding: clamp(34px, 5vw, 70px); display: flex; flex-direction: column; justify-content: center; }
+    .living h2 { color: #fff200; }
+    .living p { color: #e8e0d2; }
+
+    .newest { display: grid; grid-template-columns: 1.2fr .9fr; gap: 42px; align-items: center; padding: 38px; border: 1px solid var(--gold); background: rgba(255,255,255,.42); }
+    .newest img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border: 1px solid var(--line); }
+    .newest h2 { color: var(--oxblood); }
+    .alpha { margin-top: 28px; text-align: center; color: var(--oxblood); font-weight: 600; }
+
+    @keyframes greeting { 0%,100% { transform: rotate(-.4deg) translateY(0); } 50% { transform: rotate(.6deg) translateY(-7px); } }
+
+    footer { margin-top: 82px; padding: 38px 0; background: #151512; color: #d8d0c2; border-top: 1px solid var(--gold); text-align: center; font-size: 13px; }
+    footer strong { display: block; margin-bottom: 8px; color: #fff200; font: 18px var(--serif); }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 850px) {
+      .menu { display: block; }
+      nav { display: none; position: absolute; top: 72px; left: 0; right: 0; padding: 18px 20px 25px; background: #181714; flex-direction: column; align-items: stretch; }
+      nav.open { display: flex; }
+      .nav > .button { display: none; }
+      .hero-grid, .intro, .living, .newest { grid-template-columns: 1fr; }
+      .hero { padding-top: 34px; }
+      .hero-grid { gap: 30px; }
+      .cards { grid-template-columns: 1fr; }
+      .timeline-inner { grid-template-columns: 1fr; gap: 12px; }
+      .vline, .seal { display: none; }
+      .years { font-size: 40px; }
+      .living-copy { order: -1; }
+      .hero-visual { padding-left: 48px; }
+      .guide { left: -22px; width: 190px; }
+      .guide-label { left: 0; }
+      section { padding: 58px 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+<!-- isaacfun-nav:start -->
+<nav style="position:fixed;top:0;left:0;z-index:2147483000;display:flex;gap:16px;
+align-items:center;padding:8px 12px;background:rgba(201,201,201,0.92);
+border-right:1px solid #333;border-bottom:1px solid #333;
+font-family:'Courier Prime','Courier New',Courier,monospace;">
+  <a href="../../index.html" style="color:#141414;text-decoration:none;font-size:14px;font-weight:700;"
+     onmouseover="this.style.textDecoration='underline'"
+     onmouseout="this.style.textDecoration='none'">isaacfun.xyz</a>
+  <a href="../../index.html#/enjoy" style="color:#141414;text-decoration:none;font-size:14px;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">&larr; enjoy</a>
+</nav>
+<!-- isaacfun-nav:end -->
+
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#top"><img class="brand-icon" src="assets/museum-icon.webp" alt="Museum icon"><span>The Unofficial Roblox Museum</span></a>
+      <button class="menu" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <nav aria-label="Primary navigation">
+        <a href="#about">About</a><a href="#timeline">Timeline</a><a href="#exhibits">Exhibits</a><a href="#newest">Newest Portal</a>
+      </nav>
+      <a class="button primary play-link" href="https://www.roblox.com/games/118722747437383/The-Unofficial-Roblox-Museum-Prototype" target="_blank" rel="noopener">Play on Roblox</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="reveal">
+          <h1>THE UNOFFICIAL<br>ROBLOX MUSEUM</h1>
+          <div class="rule"></div>
+          <p>Explore events from 2007 to 2015 (2016–2026 coming soon), equip historical items and gear, and travel through accessible original experiences and credited fan recreations.</p>
+          <div class="actions"><a class="button primary play-link" href="https://www.roblox.com/games/118722747437383/The-Unofficial-Roblox-Museum-Prototype" target="_blank" rel="noopener">Enter the Museum</a><a class="button ghost" href="#timeline">Browse the Timeline</a></div>
+        </div>
+        <div class="hero-visual reveal">
+          <div class="frame"><img class="hero-image" src="assets/museum-hall.png" alt="The museum's central hall with event exhibits"></div>
+          <img class="guide" src="assets/lifcoolkid-waving.png" alt="LifCoolKid waving at the museum entrance">
+          <div class="guide-label"><small>Your tour guide</small>@LifCoolKid</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="timeline-band" id="timeline"><div class="wrap timeline-inner"><div class="years">2007 — 2026</div><div class="vline"></div><p>Nineteen years of events, artifacts, portals and recreations—arranged as one explorable timeline.</p><div class="seal">Ⅲ</div></div></div>
+
+    <section id="about">
+      <div class="wrap">
+        <div class="intro reveal"><div><h2>More Than a Portal Hub</h2><div class="rule"></div></div><p>Read the story behind each event, inspect its artifacts, try on memorable items, and continue into experiences that can still be visited.</p></div>
+        <div class="cards" id="exhibits">
+          <article class="card reveal"><img src="assets/egg-exhibit.png" alt="Egg exhibit with artifacts and a glowing portal"><div class="card-body"><h3>Explore the Exhibits</h3><p>Walk through themed rooms filled with items, artifacts and memories from past Roblox events.</p></div></article>
+          <article class="card reveal"><img src="assets/equip-artifact.png" alt="A player equipping an artifact inside the museum"><div class="card-body"><h3>Equip the Past</h3><p>Try on historical hats, items and usable gear without claiming ownership of the catalog asset. Some accessories may still be obtainable.</p></div></article>
+          <article class="card reveal"><img src="assets/gallery-view.png" alt="Classic Roblox fountain surrounded by event galleries"><div class="card-body"><h3>Visit What Remains</h3><p>Enter accessible originals or credited fan recreations through labeled portals.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section><div class="wrap living reveal"><img src="assets/grand-hall.png" alt="A wide view of the museum's central gallery"><div class="living-copy"><div class="eyebrow">An expanding collection</div><h2>A Living Museum</h2><p>Roblox events continue to evolve, and so does the museum. New exhibits can be added as today’s experiences become part of history—allowing the timeline to continue beyond 2026.</p></div></div></section>
+
+    <section id="newest"><div class="wrap"><div class="newest reveal"><img src="assets/newest-portal.png" alt="The portal at the museum entrance leading to the newest event"><div><h2>Newest Portal</h2><p>Jump directly to the newest event from the museum entrance, then return to explore where Roblox events began.</p><a class="button primary play-link" href="https://www.roblox.com/games/118722747437383/The-Unofficial-Roblox-Museum-Prototype" target="_blank" rel="noopener">Visit the Museum</a></div></div><div class="alpha">ALPHA — Some destinations may be unavailable or may no longer function as originally intended.</div></div></section>
+  </main>
+
+  <footer><div class="wrap"><strong>The Unofficial Events Museum</strong>Unofficial fan-made project. Credit belongs to Roblox, original experience developers, item creators and credited recreation developers.</div></footer>
+
+  <script>
+    const menu = document.querySelector('.menu');
+    const nav = document.querySelector('nav');
+    menu.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); }));
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }), { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.play-link').forEach(link => link.addEventListener('click', event => {
+
+    }));
+  </script>
+</body>
+</html>

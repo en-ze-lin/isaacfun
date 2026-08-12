@@ -32,7 +32,7 @@ import re
 import sys
 from pathlib import Path
 
-SECTIONS = ("tools", "concepts", "ideas")
+SECTIONS = ("use", "imagine", "enjoy", "digest")
 
 
 def find_section_array(text: str, section: str):

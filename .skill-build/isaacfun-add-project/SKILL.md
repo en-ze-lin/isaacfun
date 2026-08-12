@@ -22,7 +22,8 @@ appending an entry there. Everything else (folder, thumbnail, navbar) is bookkee
 - The site folder is the one containing **both** `projects.js` and `index.html`.
   Locate it before doing anything; do not hardcode a path. If you can't find it,
   ask the user where the site lives and stop.
-- Sections are `tools`, `concepts`, and `ideas`. `about` is prose, not projects.
+- Sections are `use`, `imagine`, `enjoy`, and `digest` (their homepage labels are
+  USE / IMAGINE / ENJOY / DIGEST). `about` is prose, not projects.
 - Theme: light-gray "paper", black text, Courier Prime (typewriter) monospace,
   square corners, no color accents, everything centered. Anything you generate
   (descriptions, fallback thumbnails) must fit that quiet, print-like tone — no

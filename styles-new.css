@@ -127,7 +127,7 @@ a { color: inherit; }
 /* ---------------- Page content ---------------- */
 #app {
   width: 100%;
-  max-width: 960px;
+  max-width: min(1680px, 92vw);   /* fill more of wide screens, keep margins */
   margin: 26px auto 0;
   padding-top: 26px;
   border-top: 1px solid var(--line);
@@ -159,9 +159,9 @@ a { color: inherit; }
 /* ---------------- Project cards ---------------- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 14px;
-  max-width: 900px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -182,7 +182,8 @@ a { color: inherit; }
 .card .logo {
   flex: 0 0 auto;
   width: 120px;
-  align-self: stretch;
+  aspect-ratio: 1 / 1;     /* always a square; image scales in via cover */
+  align-self: flex-start;
   background: var(--logo) center / cover no-repeat;
   border: 1px solid var(--line);
   display: flex; align-items: center; justify-content: center;

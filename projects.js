@@ -27,7 +27,7 @@
    01, 02, 03 ... are added automatically, top to bottom.
      label = the BIG text shown on the homepage (write it any way)
      slug  = which page it opens; must match a section name in
-             window.SITE below (about / tools / concepts / ideas / read)
+             window.SITE below (about / use / imagine / enjoy / digest)
    ============================================================= */
 // Hover on the homepage reveals a hidden letter. By default one letter is
 // blanked automatically. Options per item:
@@ -35,11 +35,11 @@
 //   masked: "..."  -> choose EXACTLY which letters are blanked ("_" = hidden;
 //                     must be the same length as the label)
 window.MENU = [
-  { label: "ABOUT",   slug: "about"    },
-  { label: "USE",     slug: "tools"    },
-  { label: "IMAGINE", slug: "concepts", masked: "_MA_INE" },
-  { label: "ENJOY",   slug: "ideas",    masked: "ENJ_Y"   },
-  { label: "DIGEST",  slug: "read"     }
+  { label: "ABOUT",   slug: "about"   },
+  { label: "USE",     slug: "use"     },
+  { label: "IMAGINE", slug: "imagine", masked: "_MA_INE" },
+  { label: "ENJOY",   slug: "enjoy",   masked: "ENJ_Y"   },
+  { label: "DIGEST",  slug: "digest"  }
 ];
 
 
@@ -52,16 +52,16 @@ window.SITE = {
     "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, nulla gravida orci a odio."
   ],
 
-  /* -------- Tools -------- */
-  tools: [
+  /* -------- Use (tools) -------- */
+  use: [
     { slug: "waveform-editor", title: "Waveform Editor", description: "A browser-based audio slicer for trimming and layering short samples.", image: "" },
     { slug: "color-extractor", title: "Color Extractor", description: "Pull dominant palettes from any image and export them as tokens.",      image: "" },
     { slug: "markdown-deck",   title: "Markdown Deck",   description: "Turn a plain text file into a keyboard-driven slide presentation.",    image: "" },
     { slug: "unit-converter",  title: "Unit Converter",  description: "A tiny, fast converter for length, mass, temperature, and time.",     image: "" }
   ],
 
-  /* -------- Concepts -------- */
-  concepts: [
+  /* -------- Imagine (concepts) -------- */
+  imagine: [
     { slug: "slow-interfaces", title: "Slow Interfaces", description: "An exploration of software that intentionally resists urgency.",   image: "" },
     { slug: "local-first",     title: "Local First",     description: "Notes on building apps that own their data before the cloud does.", image: "" },
     { slug: "ambient-displays",title: "Ambient Displays", description: "Screens that inform at a glance without demanding attention.",     image: "" },
@@ -70,16 +70,17 @@ window.SITE = {
     { slug: "jandorm", title: "JanDorm", description: "A compact stay for travelers who carry their world with them.", image: "projects/jandorm/og.png", url: "projects/jandorm/index.html" }
   ],
 
-  /* -------- Ideas -------- */
-  ideas: [
+  /* -------- Enjoy (ideas) -------- */
+  enjoy: [
     { slug: "the-reading-room", title: "The Reading Room", description: "A single-tab reader that hides everything but the words.",        image: "" },
     { slug: "grid-journal",     title: "Grid Journal",     description: "One square per day, colored by how the day actually felt.",       image: "" },
     { slug: "sound-of-places",  title: "Sound of Places",  description: "Field recordings mapped to the streets where they were made.",    image: "" },
-    { slug: "paper-radio",      title: "Paper Radio",      description: "A printable weekly digest generated from your own feeds.",        image: "" }
+    { slug: "paper-radio",      title: "Paper Radio",      description: "A printable weekly digest generated from your own feeds.",        image: "" },
+    { slug: "events-museum", title: "The Unofficial Events Museum", description: "A walkable museum preserving past Roblox events and their artifacts.", image: "projects/events-museum/assets/museum-icon.webp", url: "projects/events-museum/index.html" }
   ],
 
-  /* -------- Read (writing / notes) -------- */
-  read: [
+  /* -------- Digest (read / writing) -------- */
+  digest: [
     { slug: "field-notes",  title: "Field Notes",  description: "Short essays on making small, quiet software.", image: "" },
     { slug: "reading-list", title: "Reading List", description: "Books and articles worth your time.",           image: "" }
   ]

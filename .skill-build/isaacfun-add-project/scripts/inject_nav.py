@@ -22,7 +22,7 @@ from pathlib import Path
 MARK_OPEN = "<!-- isaacfun-nav:start -->"
 MARK_CLOSE = "<!-- isaacfun-nav:end -->"
 
-SECTIONS = ("tools", "concepts", "ideas")
+SECTIONS = ("use", "imagine", "enjoy", "digest")
 
 
 def build_nav(section: str | None = None) -> str:
