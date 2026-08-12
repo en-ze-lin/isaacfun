@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>isaacfun.xyz</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>isaacfun.xyz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=VT323&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles-new.css" />
 </head>
+
 <body>
   <main id="main">
     <!-- Masthead. On home it's the whole menu; elsewhere just the title,
@@ -23,127 +27,128 @@
 
   <footer id="footer">© <span id="year"></span> isaacfun.xyz</footer>
 
-<script src="projects.js"></script>
-<script>
-  // The home menu is defined in projects.js (window.MENU) so you can edit
-  // labels/order there without touching this file. Fallback kept just in case.
-  const PAGES = window.MENU || [
-    { slug: "about", label: "ABOUT" }, { slug: "tools", label: "USE" },
-    { slug: "concepts", label: "REMIX" }, { slug: "ideas", label: "ENJOY" },
-    { slug: "read", label: "READ" }
-  ];
-  const LABELS = Object.fromEntries(PAGES.map((p) => [p.slug, p.label]));
-  const SITE = window.SITE || {};
+  <script src="projects.js"></script>
+  <script>
+    // The home menu is defined in projects.js (window.MENU) so you can edit
+    // labels/order there without touching this file. Fallback kept just in case.
+    const PAGES = window.MENU || [
+      { slug: "about", label: "ABOUT" }, { slug: "tools", label: "USE" },
+      { slug: "concepts", label: "REMIX" }, { slug: "ideas", label: "ENJOY" },
+      { slug: "read", label: "READ" }
+    ];
+    const LABELS = Object.fromEntries(PAGES.map((p) => [p.slug, p.label]));
+    const SITE = window.SITE || {};
 
-  const main  = document.getElementById("main");
-  const app   = document.getElementById("app");
-  const index = document.getElementById("index");
-  document.getElementById("year").textContent = new Date().getFullYear();
+    const main = document.getElementById("main");
+    const app = document.getElementById("app");
+    const index = document.getElementById("index");
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-  const initials = (t) => (t.split(" ").map(w => w[0]).join("").slice(0, 2) || "·").toUpperCase();
-  const heading = (slug) => (LABELS[slug] || slug).toLowerCase();
+    const initials = (t) => (t.split(" ").map(w => w[0]).join("").slice(0, 2) || "·").toUpperCase();
+    const heading = (slug) => (LABELS[slug] || slug).toLowerCase();
 
-  // Deterministic "missing letter" for the home menu (desktop reveals it on
-  // hover). Same word -> same hidden position every time (not randomized).
-  function hashOf(s) {
-    let h = 0;
-    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    return h;
-  }
-  function mask(label, blanks) {
-    blanks = blanks || 1;
-    if (label.length < 2) return label;
-    // Candidate positions (never the first letter), ordered deterministically.
-    const pos = [];
-    for (let i = 1; i < label.length; i++) pos.push(i);
-    pos.sort((a, b) => hashOf(label + "#" + a) - hashOf(label + "#" + b));
-    const hide = new Set(pos.slice(0, Math.min(blanks, pos.length)));
-    let out = "";
-    for (let i = 0; i < label.length; i++) out += hide.has(i) ? "_" : label[i];
-    return out;
-  }
+    // Deterministic "missing letter" for the home menu (desktop reveals it on
+    // hover). Same word -> same hidden position every time (not randomized).
+    function hashOf(s) {
+      let h = 0;
+      for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+      return h;
+    }
+    function mask(label, blanks) {
+      blanks = blanks || 1;
+      if (label.length < 2) return label;
+      // Candidate positions (never the first letter), ordered deterministically.
+      const pos = [];
+      for (let i = 1; i < label.length; i++) pos.push(i);
+      pos.sort((a, b) => hashOf(label + "#" + a) - hashOf(label + "#" + b));
+      const hide = new Set(pos.slice(0, Math.min(blanks, pos.length)));
+      let out = "";
+      for (let i = 0; i < label.length; i++) out += hide.has(i) ? "_" : label[i];
+      return out;
+    }
 
-  // ----- The numbered index (home only) -----
-  function renderIndex(current) {
-    index.innerHTML = PAGES.map((p, i) => {
-      const num = String(i + 1).padStart(2, "0");
-      const active = p.slug === current ? " active" : "";
-      return '<a class="idx-link' + active + '" href="#/' + p.slug + '">' +
-               '<span class="n">' + num + '</span>' +
-               '<span class="t">' +
-                 '<span class="masked">' + (p.masked || mask(p.label, p.blanks)) + '</span>' +
-                 '<span class="full">' + p.label + '</span>' +
-               '</span>' +
-             "</a>";
-    }).join("");
-  }
+    // ----- The numbered index (home only) -----
+    function renderIndex(current) {
+      index.innerHTML = PAGES.map((p, i) => {
+        const num = String(i + 1).padStart(2, "0");
+        const active = p.slug === current ? " active" : "";
+        return '<a class="idx-link' + active + '" href="#/' + p.slug + '">' +
+          '<span class="n">' + num + '</span>' +
+          '<span class="t">' +
+          '<span class="masked">' + (p.masked || mask(p.label, p.blanks)) + '</span>' +
+          '<span class="full">' + p.label + '</span>' +
+          '</span>' +
+          "</a>";
+      }).join("");
+    }
 
-  // ----- About -----
-  function renderAbout() {
-    const paras = (SITE.about || []).map((p) => "<p>" + p + "</p>").join("");
-    return '<h1 class="page-title">' + heading("about") + '</h1><div class="about">' + paras + "</div>";
-  }
+    // ----- About -----
+    function renderAbout() {
+      const paras = (SITE.about || []).map((p) => "<p>" + p + "</p>").join("");
+      return '<h1 class="page-title">' + heading("about") + '</h1><div class="about">' + paras + "</div>";
+    }
 
-  // ----- Collection (tools / concepts / ideas / read) -----
-  function renderCollection(slug) {
-    const items = SITE[slug] || [];
-    const cards = items.map((item) => {
-      const logo = item.image
-        ? '<div class="logo" style="background-image:url(\'' + item.image + '\')"></div>'
-        : '<div class="logo">' + initials(item.title) + "</div>";
-      const href = item.url ? item.url : ("#/" + slug + "/" + item.slug);
-      return (
-        '<a class="card" href="' + href + '">' +
+    // ----- Collection (tools / concepts / ideas / read) -----
+    function renderCollection(slug) {
+      const items = SITE[slug] || [];
+      const cards = items.map((item) => {
+        const logo = item.image
+          ? '<div class="logo" style="background-image:url(\'' + item.image + '\')"></div>'
+          : '<div class="logo">' + initials(item.title) + "</div>";
+        const href = item.url ? item.url : ("#/" + slug + "/" + item.slug);
+        return (
+          '<a class="card" href="' + href + '">' +
           logo +
           '<div class="body">' +
-            '<div class="title">' + item.title + "</div>" +
-            '<div class="desc">' + item.description + "</div>" +
+          '<div class="title">' + item.title + "</div>" +
+          '<div class="desc">' + item.description + "</div>" +
           "</div>" +
-        "</a>"
-      );
-    }).join("");
-    const body = items.length
-      ? '<div class="grid">' + cards + "</div>"
-      : '<p class="empty">nothing here yet.</p>';
-    return '<h1 class="page-title">' + heading(slug) + "</h1>" + body;
-  }
-
-  // ----- Single project stub -----
-  function renderProject(slug, itemSlug) {
-    const item = (SITE[slug] || []).find((i) => i.slug === itemSlug);
-    if (!item) return renderCollection(slug);
-    return (
-      '<h1 class="page-title">' + item.title + "</h1>" +
-      '<div class="about"><p>' + item.description + "</p>" +
-      '<p>this project lives at <code>projects/' + item.slug + "/</code></p></div>" +
-      '<p class="back"><a href="#/' + slug + '">&larr; ' + heading(slug) + "</a></p>"
-    );
-  }
-
-  // ----- Router -----
-  function route() {
-    const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
-    const slug = parts[0] || "home";
-    renderIndex(slug);
-
-    const isHome = slug === "home";
-    main.classList.toggle("is-home", isHome);
-
-    if (isHome) {
-      app.innerHTML = "";
-    } else if (slug === "about") {
-      app.innerHTML = renderAbout();
-    } else if (SITE[slug]) {
-      app.innerHTML = parts[1] ? renderProject(slug, parts[1]) : renderCollection(slug);
-    } else {
-      app.innerHTML = renderAbout();
+          "</a>"
+        );
+      }).join("");
+      const body = items.length
+        ? '<div class="grid">' + cards + "</div>"
+        : '<p class="empty">nothing here yet.</p>';
+      return '<h1 class="page-title">' + heading(slug) + "</h1>" + body;
     }
-    window.scrollTo(0, 0);
-  }
 
-  window.addEventListener("hashchange", route);
-  if (!location.hash) location.hash = "#/home";
-  route();
-</script>
+    // ----- Single project stub -----
+    function renderProject(slug, itemSlug) {
+      const item = (SITE[slug] || []).find((i) => i.slug === itemSlug);
+      if (!item) return renderCollection(slug);
+      return (
+        '<h1 class="page-title">' + item.title + "</h1>" +
+        '<div class="about"><p>' + item.description + "</p>" +
+        '<p>this project lives at <code>projects/' + item.slug + "/</code></p></div>" +
+        '<p class="back"><a href="#/' + slug + '">&larr; ' + heading(slug) + "</a></p>"
+      );
+    }
+
+    // ----- Router -----
+    function route() {
+      const parts = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
+      const slug = parts[0] || "home";
+      renderIndex(slug);
+
+      const isHome = slug === "home";
+      main.classList.toggle("is-home", isHome);
+
+      if (isHome) {
+        app.innerHTML = "";
+      } else if (slug === "about") {
+        app.innerHTML = renderAbout();
+      } else if (SITE[slug]) {
+        app.innerHTML = parts[1] ? renderProject(slug, parts[1]) : renderCollection(slug);
+      } else {
+        app.innerHTML = renderAbout();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener("hashchange", route);
+    if (!location.hash) location.hash = "#/home";
+    route();
+  </script>
 </body>
+
 </html>
