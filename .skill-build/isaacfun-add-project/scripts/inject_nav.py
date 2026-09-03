@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Inject a small shared navbar into a project's index.html.
 
-The project lives at projects/<slug>/index.html, so the main site is two
+The project lives at <section>/<slug>/index.html, so the main site is two
 levels up. The injected bar links back to the site's pages and is wrapped
 in a marker comment so re-running the skill won't duplicate it.
 
@@ -34,7 +34,7 @@ def build_nav(section: str | None = None) -> str:
     _base = ("color:#141414;text-decoration:none;font-size:14px;")
     back = ""
     if section in SECTIONS:
-        back = (f'<a href="../../index.html#/{section}" '
+        back = (f'<a href="../../index.html?page={section}" '
                 f'style="{_base}" '
                 f'onmouseover="this.style.textDecoration=\'underline\'" '
                 f'onmouseout="this.style.textDecoration=\'none\'">&larr; {section}</a>')

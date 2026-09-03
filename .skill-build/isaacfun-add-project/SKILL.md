@@ -1,6 +1,6 @@
 ---
 name: isaacfun-add-project
-description: Adds a new project to the Isaac Fun portfolio site (github en-ze-lin/isaacfun, deployed on Vercel, eventually isaacfun.xyz). Use whenever the user uploads a file, folder, or zip, or points at a repo, and asks to "add it to my site", "publish this", "put this on isaacfun", "add a new tool/concept/idea", or similar. Creates projects/<slug>/, auto-captures a square thumbnail as the card logo, injects the shared navbar into the project, and appends an entry to projects.js so the card shows up automatically.
+description: Adds a new project to the Isaac Fun portfolio site (github en-ze-lin/isaacfun, deployed on Vercel, eventually isaacfun.xyz). Use whenever the user uploads a file, folder, or zip, or points at a repo, and asks to "add it to my site", "publish this", "put this on isaacfun", "add a new tool/concept/idea", or similar. Creates <section>/<slug>/, auto-captures a square thumbnail as the card logo, injects the shared navbar into the project, and appends an entry to projects.js so the card shows up automatically.
 metadata:
   triggers:
     - "add this to my site"
@@ -51,12 +51,12 @@ If a `.zip` is provided, unzip to a temp folder first.
 
    Always ask — never guess the title or description silently.
 
-4. **Copy files into place.** Create `<site>/projects/<slug>/` and copy all
+4. **Copy files into place.** Create `<site>/<section>/<slug>/` and copy all
    uploaded files in. A lone `.html` file is saved as `index.html`. If the slug
    folder already exists, ask to pick another name or confirm overwrite.
 
 5. **Capture the thumbnail (card logo).**
-   `python3 scripts/capture_thumbnail.py <site>/projects/<slug>/index.html <site>/projects/<slug>/thumbnail`
+   `python3 scripts/capture_thumbnail.py <site>/<section>/<slug>/index.html <site>/<section>/<slug>/thumbnail`
    It screenshots the page with Playwright when available, else writes a themed
    SVG monogram. It prints the final path (`thumbnail.png` or `thumbnail.svg`).
    Use that path, relative to `<site>`, as the `image` value in the next step.
@@ -65,12 +65,12 @@ If a `.zip` is provided, unzip to a temp folder first.
 
 6. **Inject the shared navbar** so the project links back to the site. Pass the
    section so the bar shows a prominent "&larr; Concepts" (etc.) back button:
-   `python3 scripts/inject_nav.py <site>/projects/<slug>/index.html <section>`
+   `python3 scripts/inject_nav.py <site>/<section>/<slug>/index.html <section>`
    It is idempotent (safe to re-run) and only touches a marked block — it does
    not rewrite the user's own code or styles.
 
 7. **Update `projects.js`** — never hand-edit by string replacement:
-   `python3 scripts/update_projects.py --site <site> --section <tools|concepts|ideas> --slug <slug> --title "<title>" --description "<desc>" --image "projects/<slug>/thumbnail.png" [--overwrite]`
+   `python3 scripts/update_projects.py --site <site> --section <tools|concepts|ideas> --slug <slug> --title "<title>" --description "<desc>" --image "<section>/<slug>/thumbnail.png" [--overwrite]`
 
 8. **(Optional) Subdomain.** If the user wants `slug.isaacfun.xyz`, tell them to
    add the domain in the Vercel dashboard and a CNAME pointing at

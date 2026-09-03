@@ -5,18 +5,31 @@
    projects. The homepage builds every card from this data using
    .map(), so anything you change here shows up automatically.
 
-   Each project card has four fields:
-     slug        kebab-case id, also the subfolder name in /projects
+   Each project card has four required fields, plus one optional:
+     slug        kebab-case id
      title       the bold text (upper-right of the card)
      description one short sentence (lower-right of the card)
      image       path to the square logo on the LEFT of the card.
                  Leave "" to show an auto-generated monogram instead.
                  The add-project skill fills this with a screenshot,
                  but you can point it at ANY image, e.g.:
-                   image: "projects/waveform-editor/thumbnail.png"
+                   image: "imagine/waveform-editor/thumbnail.png"
+     url         (optional) only set once a project has a real page
+                 built for it. When present, the card links straight
+                 to that page (a normal link, full page load). When
+                 absent, the card opens a small placeholder page on
+                 the site itself.
+
+   FOLDER LAYOUT — a built project's files live in a folder that
+   matches its section, not a flat "projects/" folder:
+     imagine/<slug>/index.html
+     enjoy/<slug>/index.html
+     use/<slug>/index.html
+     digest/<slug>/index.html
+   e.g. the JanDorm project's url is "imagine/jandorm/index.html".
 
    To add a project by hand: copy one { ... } line, paste it into
-   the right section, and edit the four fields. Done.
+   the right section, and edit the fields. Done.
    ============================================================= */
 
 
@@ -43,6 +56,20 @@ window.MENU = [
 ];
 
 
+/* =============================================================
+   SECTION INTROS  —  one short line shown above the card grid on
+   use / imagine / enjoy (about has its own paragraphs; digest has
+   none for now). Leave a section out of this object to show no
+   intro line at all. Currently lorem ipsum — replace with real
+   copy whenever you're ready.
+   ============================================================= */
+window.SECTION_INTRO = {
+  use:     "Lorem ipsum dolor sit amet, consectetur adipiscing elit — small tools built to solve one problem well.",
+  imagine: "Lorem ipsum dolor sit amet, consectetur adipiscing elit — concepts and ideas that haven't fully shipped yet.",
+  enjoy:   "Lorem ipsum dolor sit amet, consectetur adipiscing elit — things made purely because they were fun to make."
+};
+
+
 window.SITE = {
 
   /* -------- About page: one string per paragraph -------- */
@@ -66,8 +93,8 @@ window.SITE = {
     { slug: "local-first",     title: "Local First",     description: "Notes on building apps that own their data before the cloud does.", image: "" },
     { slug: "ambient-displays",title: "Ambient Displays", description: "Screens that inform at a glance without demanding attention.",     image: "" },
     { slug: "calm-automation", title: "Calm Automation", description: "Letting scripts do quiet work so the desk stays clear.",           image: "" },
-    { slug: "jansport-outpost", title: "JanSport Outpost", description: "Carry your story. Find your Outpost.", image: "projects/jansport-outpost/thumbnail.png", url: "projects/jansport-outpost/index.html" },
-    { slug: "jandorm", title: "JanDorm", description: "A compact stay for travelers who carry their world with them.", image: "projects/jandorm/og.png", url: "projects/jandorm/index.html" }
+    { slug: "jansport-outpost", title: "JanSport Outpost", description: "Carry your story. Find your Outpost.", image: "imagine/jansport-outpost/thumb.webp", url: "imagine/jansport-outpost/index.html" },
+    { slug: "jandorm", title: "JanDorm", description: "A compact stay for travelers who carry their world with them.", image: "imagine/jandorm/thumb.webp", url: "imagine/jandorm/index.html" }
   ],
 
   /* -------- Enjoy (ideas) -------- */
@@ -76,7 +103,7 @@ window.SITE = {
     { slug: "grid-journal",     title: "Grid Journal",     description: "One square per day, colored by how the day actually felt.",       image: "" },
     { slug: "sound-of-places",  title: "Sound of Places",  description: "Field recordings mapped to the streets where they were made.",    image: "" },
     { slug: "paper-radio",      title: "Paper Radio",      description: "A printable weekly digest generated from your own feeds.",        image: "" },
-    { slug: "events-museum", title: "The Unofficial Events Museum", description: "A walkable museum preserving past Roblox events and their artifacts.", image: "projects/events-museum/assets/museum-icon.webp", url: "projects/events-museum/index.html" }
+    { slug: "events-museum", title: "The Unofficial Events Museum", description: "A walkable museum preserving past Roblox events and their artifacts.", image: "enjoy/events-museum/assets/museum-icon.webp", url: "enjoy/events-museum/index.html" }
   ],
 
   /* -------- Digest (read / writing) -------- */

@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JanSport Outpost — Story Website</title>
+  <style>
+    :root {
+      --navy: #0b274d;
+      --gold: #d8a33b;
+      --cream: #f8f1e6;
+      --paper: #fffaf0;
+      --ink: #10233d;
+      --muted: #697282;
+      --line: rgba(16, 35, 61, .16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(216, 163, 59, .22), transparent 30%),
+        radial-gradient(circle at 88% 2%, rgba(11, 39, 77, .12), transparent 28%),
+        linear-gradient(180deg, #fbf7ef, #efe6d8);
+      color: var(--ink);
+    }
+
+    .app {
+      width: min(1320px, 94vw);
+      margin: 22px auto 34px;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: min(390px, 42vw);
+      height: auto;
+      display: block;
+    }
+
+    .logoText {
+      font-weight: 950;
+      font-size: 2rem;
+      letter-spacing: -.04em;
+    }
+
+    .headerText h1 {
+      margin: 0;
+      font-size: clamp(1.05rem, 2.1vw, 1.6rem);
+      letter-spacing: -.01em;
+    }
+
+    .headerText p {
+      margin: .28rem 0 0;
+      color: var(--muted);
+    }
+
+    .tools {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill,
+    button.tool {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 250, 240, .85);
+      color: var(--navy);
+      padding: 10px 15px;
+      font-weight: 850;
+      box-shadow: 0 8px 24px rgba(10, 24, 45, .08);
+    }
+
+    button.tool {
+      cursor: pointer;
+    }
+
+    button.tool:hover {
+      background: white;
+    }
+
+    .viewer {
+      background: rgba(255, 250, 240, .74);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: 18px;
+      box-shadow: 0 24px 80px rgba(10, 24, 45, .18);
+    }
+
+    .imageFrame {
+      position: relative;
+      height: min(72vh, 740px);
+      min-height: 560px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #111827;
+    }
+
+    .slideImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .textLayer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      opacity: 1;
+      transition: opacity .28s ease;
+      pointer-events: none;
+    }
+
+    .textLayer.hidden {
+      opacity: 0;
+    }
+
+    .textShadow {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(50%, 590px);
+      background:
+        radial-gradient(circle at 70% 15%, rgba(216, 163, 59, .16), transparent 25%),
+        linear-gradient(90deg, rgba(4, 14, 28, 0), rgba(4, 14, 28, .62) 26%, rgba(4, 14, 28, .9));
+    }
+
+    .caption {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: min(470px, 43%);
+      padding: 38px 34px 34px 26px;
+      color: white;
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .captionInner {
+      width: 100%;
+      max-height: 100%;
+      overflow: auto;
+      padding-right: 8px;
+      scrollbar-width: thin;
+    }
+
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 900;
+      font-size: .78rem;
+      color: rgba(255, 255, 255, .80);
+    }
+
+    .caption h2 {
+      margin: 10px 0 8px;
+      font-size: clamp(1.55rem, 2.4vw, 2.42rem);
+      line-height: 1.05;
+      letter-spacing: -.025em;
+    }
+
+    .caption .sub {
+      margin: 0 0 18px;
+      color: rgba(255, 255, 255, .90);
+      font-weight: 800;
+    }
+
+    .caption p {
+      margin: 0 0 14px;
+      line-height: 1.68;
+      color: rgba(255, 255, 255, .94);
+      font-size: .99rem;
+    }
+
+    .arrow {
+      position: absolute;
+      z-index: 4;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 0;
+      cursor: pointer;
+      background: rgba(255, 250, 240, .88);
+      color: var(--navy);
+      font-size: 2.2rem;
+      line-height: 1;
+      box-shadow: 0 12px 35px rgba(4, 14, 28, .25);
+    }
+
+    .arrow:hover {
+      background: white;
+    }
+
+    .prev {
+      left: 16px;
+    }
+
+    .next {
+      right: 16px;
+    }
+
+    .bottom {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progressTrack {
+      height: 10px;
+      flex: 1;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(11, 39, 77, .12);
+    }
+
+    .progress {
+      height: 100%;
+      width: 16.7%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--navy), var(--gold));
+      transition: width .25s ease;
+    }
+
+    .dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 0;
+      background: rgba(11, 39, 77, .25);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .dot.active {
+      width: 30px;
+      background: linear-gradient(90deg, var(--navy), var(--gold));
+    }
+
+    .help {
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    @media (max-width: 900px) {
+      .top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .brand {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .logo {
+        width: min(420px, 88vw);
+      }
+
+      .tools {
+        justify-content: flex-start;
+      }
+
+      #textToggle {
+        display: none;
+      }
+
+      .imageFrame {
+        height: auto;
+        min-height: 0;
+      }
+
+      .slideImage {
+        height: auto;
+        aspect-ratio: 16 / 11;
+      }
+
+      .textLayer {
+        position: static;
+        opacity: 1 !important;
+        pointer-events: auto;
+      }
+
+      .textShadow {
+        display: none;
+      }
+
+      .caption {
+        position: static;
+        width: 100%;
+        padding: 22px 18px 20px;
+        color: var(--ink);
+        background: var(--paper);
+        display: block;
+      }
+
+      .caption p,
+      .caption .sub,
+      .kicker {
+        color: var(--ink);
+      }
+
+      .arrow {
+        top: calc((94vw - 36px) * 11 / 32);
+        width: 50px;
+        height: 50px;
+        font-size: 1.9rem;
+      }
+
+      .help {
+        display: none;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .viewer {
+        padding: 12px;
+        border-radius: 22px;
+      }
+
+      .imageFrame {
+        border-radius: 18px;
+      }
+
+      .slideImage {
+        aspect-ratio: 4 / 5;
+      }
+
+      .caption h2 {
+        font-size: 1.45rem;
+      }
+
+      .prev {
+        left: 10px;
+      }
+
+      .next {
+        right: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<!-- isaacfun-nav:start -->
+<nav style="position:fixed;top:0;left:0;z-index:2147483000;display:flex;gap:16px;
+align-items:center;padding:8px 12px;background:rgba(201,201,201,0.92);
+border-right:1px solid #333;border-bottom:1px solid #333;
+font-family:'Courier Prime','Courier New',Courier,monospace;">
+  <a href="../../" style="color:#141414;text-decoration:none;font-size:14px;font-weight:700;"
+     onmouseover="this.style.textDecoration='underline'"
+     onmouseout="this.style.textDecoration='none'">isaacfun.xyz</a>
+  <a href="../../index.html?page=imagine" style="color:#141414;text-decoration:none;font-size:14px;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">&larr; imagine</a>
+</nav>
+<!-- isaacfun-nav:end -->
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  <main class="app">
+    <header class="top">
+      <div class="brand">
+        <img class="logo"
+          src="assets/photo-1.png"
+          alt="JanSport Outpost logo">
+        <div class="headerText">
+          <h1>JanSport Outpost Story Journey</h1>
+          <p>Arrow-based version — one large image, one scene, one text overlay.</p>
+        </div>
+      </div>
+      <div class="tools">
+        <div class="pill" id="pagePill">Scene 1 / 6</div>
+        <button class="tool" id="textToggle" type="button">Hide Text</button>
+      </div>
+    </header>
+    <section class="viewer">
+      <div class="imageFrame">
+        <img class="slideImage" id="slideImage" alt="">
+        <div class="textLayer" id="textLayer">
+          <div class="textShadow"></div>
+          <aside class="caption">
+            <div class="captionInner">
+              <div class="kicker" id="sceneKicker"></div>
+              <h2 id="sceneTitle"></h2>
+              <div class="sub" id="sceneSub"></div>
+              <div id="sceneBody"></div>
+            </div>
+          </aside>
+        </div>
+        <button class="arrow prev" id="prev" type="button" aria-label="Previous scene">‹</button>
+        <button class="arrow next" id="next" type="button" aria-label="Next scene">›</button>
+      </div>
+      <footer class="bottom">
+        <div class="progressTrack">
+          <div class="progress" id="progress"></div>
+        </div>
+        <div class="help">Use arrows or keyboard ← →. Toggle text with the button.</div>
+        <div class="dots" id="dots"></div>
+      </footer>
+    </section>
+  </main>
+  <script>
+    const slides =     [
+      {
+        "scene": "Scene 1",
+        "title": "Pain / Desire",
+        "kicker": "I want somewhere casual, somewhere I can walk into alone and still feel like I belong.",
+        "image": "assets/photo-2.png",
+        "body": "My name is Ethan Lin, and I am a 20-year-old communications student at the University of Washington in Seattle. I have been using the same black JanSport backpack since freshman year, and it has been with me through almost everything: morning lectures, rainy walks across campus, media lab shifts, basketball games at the IMA, and late-night snack runs on the Ave.\n\nBut even though I am surrounded by people every day, I sometimes feel like I am just moving through campus without really being part of it. I walk around with headphones on, go to the same food spots, and spend most of my free time between class, the library, and my apartment.\n\nI want to meet more people and explore more of Seattle, but I do not want it to feel like a formal club activity. I want somewhere casual, somewhere I can walk into alone and still feel like I belong there."
+      },
+      {
+        "scene": "Scene 2",
+        "title": "Awareness",
+        "kicker": "A post on Instagram turns JanSport into a place I want to visit.",
+        "image": "assets/photo-3.png",
+        "body": "One night, I saw a post on Instagram, showing something that caught my attention. It’s a video showing a warm café-like space near University Village called JanSport Outpost Seattle. At first, I thought it was just another backpack ad, so I almost swiped it away. But when I took a closer look, it says “Bring your bag. Trade your city. Meet your people.”\n\nThis is a pleasant surprise! My JanSport bag has been with me for the last 5 years and I never knew there’s a place where JanSport owners can connect! It looks like a place you can meet interesting people from different cities and exchange badges or charms for your JanSport. I need to check it out tomorrow."
+      },
+      {
+        "scene": "Scene 3",
+        "title": "First Visit",
+        "kicker": "It looks like a café, a local adventure hub, and a community hideout.",
+        "image": "assets/photo-4.png",
+        "body": "The next morning, I decided to visit the JanSport outpost in Seattle.\n\nWhen I entered the store, I saw a retail space that’s partly a café, a local adventure hub, and also a community hideout for students, travelers, creators, and everyday explorers who carry JanSport."
+      },
+      {
+        "scene": "Scene 4",
+        "title": "Discovery Inside",
+        "kicker": "The exchange table makes the store feel like a student gathering.",
+        "image": "assets/photo-5.png",
+        "body": "Then I saw a sign board that said: “Patch & Charm Exchange — Today, 10:30 AM to 11:00 AM.”\n\nThat makes me stop. It does not look like a normal retail event. It looks more like a small student community gathering. I see people pointing at each other’s backpacks and laughing, like every patch has a story behind it."
+      },
+      {
+        "scene": "Scene 5",
+        "title": "Purchase / Joining",
+        "kicker": "My first badge feels like the beginning of membership.",
+        "image": "assets/photo-6.png",
+        "body": "I am curious, so I walk inside and ask the staff, “Can I still join this?”\n\nA staff member tells me I can register my JanSport backpack right there. I scan the QR code, register my black backpack, and choose Seattle as my first Outpost location.\n\nThen I buy a Seattle Rainline Badge because it feels like the right first piece. I walk through the rain on campus all the time, so it already feels connected to my own UW story.\n\nThe staff gives me a recycled paper envelope stamped with “First Outpost Visit — Seattle.” Inside, there is my badge, a welcome card, a campus adventure map, a blank trade card, and my digital Outpost Passport QR code.\n\nThe card says, “This is not just a badge. It is a conversation waiting to happen.”\n\nI attach the badge to my backpack before the event starts. For the first time, my bag feels less like something I just carry and more like something that can introduce me."
+      },
+      {
+        "scene": "Scene 6",
+        "title": "Usage / Advocacy",
+        "kicker": "The real exchange is not the item. It is the conversation.",
+        "image": "assets/photo-7.png",
+        "body": "At 10:30 AM, the Patch & Charm Exchange begins.\n\nI walk to the exchange table and see different city items: a Taipei Bubble Tea Charm, an Osaka Takoyaki Patch, a Hong Kong Star Ferry Charm, a New York Subway Token Charm, and several Seattle designs. I am nervous at first, but then someone points at my Seattle Rainline Badge and says, “You just joined tonight, right?”\n\nI say yes, and suddenly three people are talking to me. One person is from Seattle, one is an exchange student from Osaka, and another student is from Taipei. They start explaining which charms are rare, which ones people like trading, and which Outpost events are worth joining.\n\nFrom 10:30 to 11:00 PM, I trade my extra Seattle sticker for a Taipei Bubble Tea Charm, but the bigger exchange is not really the item. It is the conversations. We talk about rainy campus walks, favorite coffee spots near UW, food from home, and places in Seattle that I still have not visited.\n\nAfter that night, I start coming back to the Outpost café more often. Sometimes I go there to study after class, sometimes I stop by before heading back to campus, and sometimes I just go because I know someone will probably be there.\n\nOver the next few weeks, the Outpost becomes one of my regular places near UW. I start bringing classmates there after lectures, and they bring their friends too. Some of them already have JanSport backpacks, but others start buying them because they want to register for the Outpost Passport and join the exchanges.\n\nBy the end, I do not just have one new friend. I have a whole group of people I know through JanSport Outpost."
+      }
+    ];
+    let current = 0;
+    let textVisible = true;
+    const els = {
+      img: document.getElementById('slideImage'),
+      pill: document.getElementById('pagePill'),
+      layer: document.getElementById('textLayer'),
+      toggle: document.getElementById('textToggle'),
+      kicker: document.getElementById('sceneKicker'),
+      title: document.getElementById('sceneTitle'),
+      sub: document.getElementById('sceneSub'),
+      body: document.getElementById('sceneBody'),
+      progress: document.getElementById('progress'),
+      dots: document.getElementById('dots'),
+      prev: document.getElementById('prev'),
+      next: document.getElementById('next')
+    };
+    function bodyToHtml(text) {
+      return text.split("\n\n").map(p => `<p>${p}</p>`).join("");
+    }
+    function renderDots() {
+      els.dots.innerHTML = "";
+      slides.forEach((_, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "dot" + (idx === current ? " active" : "");
+        btn.type = "button";
+        btn.setAttribute("aria-label", "Go to scene " + (idx + 1));
+        btn.addEventListener("click", () => goTo(idx));
+        els.dots.appendChild(btn);
+      });
+    }
+    function render() {
+      const s = slides[current];
+      els.img.src = s.image;
+      els.img.alt = s.title;
+      els.pill.textContent = `Scene ${current + 1} / ${slides.length}`;
+      els.kicker.textContent = s.scene + " — " + s.title;
+      els.title.textContent = s.kicker;
+      els.sub.textContent = "Script";
+      els.body.innerHTML = bodyToHtml(s.body);
+      els.layer.classList.toggle("hidden", !textVisible);
+      els.toggle.textContent = textVisible ? "Hide Text" : "Show Text";
+      els.progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+      renderDots();
+    }
+    function goTo(index) {
+      current = (index + slides.length) % slides.length;
+      render();
+    }
+    function toggleText() {
+      textVisible = !textVisible;
+      render();
+    }
+    els.prev.addEventListener("click", () => goTo(current - 1));
+    els.next.addEventListener("click", () => goTo(current + 1));
+    els.toggle.addEventListener("click", toggleText);
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft") goTo(current - 1);
+      if (e.key === "ArrowRight") goTo(current + 1);
+      if (e.key.toLowerCase() === "t") toggleText();
+    });
+    render();
+  </script>
+</body>
+
+</html>

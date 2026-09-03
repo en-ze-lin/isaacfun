@@ -21,7 +21,7 @@ Usage:
     --slug waveform-editor \\
     --title "Waveform Editor" \\
     --description "A browser-based audio slicer." \\
-    --image "projects/waveform-editor/thumbnail.png" \\
+    --image "use/waveform-editor/thumbnail.png" \\
     [--overwrite]
 """
 from __future__ import annotations
@@ -106,7 +106,7 @@ def main() -> int:
         print(f"[projects] slug already present: {args.slug} (pass --overwrite)", file=sys.stderr)
         return 2
 
-    url = args.url or f"projects/{args.slug}/index.html"
+    url = args.url or f"{args.section}/{args.slug}/index.html"
     entry = format_entry(args.slug, args.title, args.description, args.image, url)
 
     if slug_present(inner, args.slug):
