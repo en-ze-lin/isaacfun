@@ -94,7 +94,8 @@ window.SITE = {
     { slug: "ambient-displays",title: "Ambient Displays", description: "Screens that inform at a glance without demanding attention.",     image: "" },
     { slug: "calm-automation", title: "Calm Automation", description: "Letting scripts do quiet work so the desk stays clear.",           image: "" },
     { slug: "jansport-outpost", title: "JanSport Outpost", description: "Carry your story. Find your Outpost.", image: "imagine/jansport-outpost/thumb.webp", url: "imagine/jansport-outpost/index.html" },
-    { slug: "jandorm", title: "JanDorm", description: "A compact stay for travelers who carry their world with them.", image: "imagine/jandorm/thumb.webp", url: "imagine/jandorm/index.html" }
+    { slug: "jandorm", title: "JanDorm", description: "A compact stay for travelers who carry their world with them.", image: "imagine/jandorm/thumb.webp", url: "imagine/jandorm/index.html" },
+    { slug: "sky-sonnet", title: "Sky Sonnet", description: "Photograph the sky and get back a sonnet written for its color and mood.", image: "imagine/sky-sonnet/thumbnail.svg", url: "imagine/sky-sonnet/index.html" }
   ],
 
   /* -------- Enjoy (ideas) -------- */
