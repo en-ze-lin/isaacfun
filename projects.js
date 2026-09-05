@@ -94,8 +94,7 @@ window.SITE = {
     { slug: "ambient-displays",title: "Ambient Displays", description: "Screens that inform at a glance without demanding attention.",     image: "" },
     { slug: "calm-automation", title: "Calm Automation", description: "Letting scripts do quiet work so the desk stays clear.",           image: "" },
     { slug: "jansport-outpost", title: "JanSport Outpost", description: "Carry your story. Find your Outpost.", image: "imagine/jansport-outpost/thumb.webp", url: "imagine/jansport-outpost/index.html" },
-    { slug: "jandorm", title: "JanDorm", description: "A compact stay for travelers who carry their world with them.", image: "imagine/jandorm/thumb.webp", url: "imagine/jandorm/index.html" },
-    { slug: "sky-sonnet", title: "Sky Sonnet", description: "Photograph the sky and get back a sonnet written for its color and mood.", image: "imagine/sky-sonnet/thumbnail.svg", url: "imagine/sky-sonnet/index.html" }
+    { slug: "jandorm", title: "JanDorm", description: "A compact stay for travelers who carry their world with them.", image: "imagine/jandorm/thumb.webp", url: "imagine/jandorm/index.html" }
   ],
 
   /* -------- Enjoy (ideas) -------- */
@@ -104,7 +103,8 @@ window.SITE = {
     { slug: "grid-journal",     title: "Grid Journal",     description: "One square per day, colored by how the day actually felt.",       image: "" },
     { slug: "sound-of-places",  title: "Sound of Places",  description: "Field recordings mapped to the streets where they were made.",    image: "" },
     { slug: "paper-radio",      title: "Paper Radio",      description: "A printable weekly digest generated from your own feeds.",        image: "" },
-    { slug: "events-museum", title: "The Unofficial Events Museum", description: "A walkable museum preserving past Roblox events and their artifacts.", image: "enjoy/events-museum/assets/museum-icon.webp", url: "enjoy/events-museum/index.html" }
+    { slug: "events-museum", title: "The Unofficial Events Museum", description: "A walkable museum preserving past Roblox events and their artifacts.", image: "enjoy/events-museum/assets/museum-icon.webp", url: "enjoy/events-museum/index.html" },
+    { slug: "sky-sonnet", title: "Sky Sonnet", description: "Photograph the sky and get back a sonnet written for its color and mood.", image: "enjoy/sky-sonnet/thumbnail.svg", url: "enjoy/sky-sonnet/index.html" }
   ],
 
   /* -------- Digest (read / writing) -------- */
