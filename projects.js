@@ -28,7 +28,7 @@
      digest/<slug>/index.html
    e.g. the JanDorm project's url is "imagine/jandorm/index.html".
 
-   To add a project by hand: copy one { ... } line, paste it into
+   To add a project by hand: copy one { ... } block, paste it into
    the right section, and edit the fields. Done.
    ============================================================= */
 
@@ -48,11 +48,11 @@
 //   masked: "..."  -> choose EXACTLY which letters are blanked ("_" = hidden;
 //                     must be the same length as the label)
 window.MENU = [
-  { label: "ABOUT",   slug: "about"   },
-  { label: "USE",     slug: "use"     },
+  { label: "ABOUT", slug: "about" },
+  { label: "USE", slug: "use" },
   { label: "IMAGINE", slug: "imagine", masked: "_MA_INE" },
-  { label: "ENJOY",   slug: "enjoy",   masked: "ENJ_Y"   },
-  { label: "DIGEST",  slug: "digest"  }
+  { label: "ENJOY", slug: "enjoy", masked: "ENJ_Y" },
+  { label: "DIGEST", slug: "digest" }
 ];
 
 
@@ -64,9 +64,9 @@ window.MENU = [
    copy whenever you're ready.
    ============================================================= */
 window.SECTION_INTRO = {
-  use:     "Lorem ipsum dolor sit amet, consectetur adipiscing elit — small tools built to solve one problem well.",
+  use: "Lorem ipsum dolor sit amet, consectetur adipiscing elit — small tools built to solve one problem well.",
   imagine: "Lorem ipsum dolor sit amet, consectetur adipiscing elit — concepts and ideas that haven't fully shipped yet.",
-  enjoy:   "Lorem ipsum dolor sit amet, consectetur adipiscing elit — things made purely because they were fun to make."
+  enjoy: "Lorem ipsum dolor sit amet, consectetur adipiscing elit — things made purely because they were fun to make."
 };
 
 
@@ -81,36 +81,130 @@ window.SITE = {
 
   /* -------- Use (tools) -------- */
   use: [
-    { slug: "waveform-editor", title: "Waveform Editor", description: "A browser-based audio slicer for trimming and layering short samples.", image: "" },
-    { slug: "color-extractor", title: "Color Extractor", description: "Pull dominant palettes from any image and export them as tokens.",      image: "" },
-    { slug: "markdown-deck",   title: "Markdown Deck",   description: "Turn a plain text file into a keyboard-driven slide presentation.",    image: "" },
-    { slug: "unit-converter",  title: "Unit Converter",  description: "A tiny, fast converter for length, mass, temperature, and time.",     image: "" }
+    {
+      slug: "waveform-editor",
+      title: "Waveform Editor",
+      description: "A browser-based audio slicer for trimming and layering short samples.",
+      image: "",
+    },
+    {
+      slug: "color-extractor",
+      title: "Color Extractor",
+      description: "Pull dominant palettes from any image and export them as tokens.",
+      image: "",
+    },
+    {
+      slug: "markdown-deck",
+      title: "Markdown Deck",
+      description: "Turn a plain text file into a keyboard-driven slide presentation.",
+      image: "",
+    },
+    {
+      slug: "unit-converter",
+      title: "Unit Converter",
+      description: "A tiny, fast converter for length, mass, temperature, and time.",
+      image: "",
+    },
   ],
 
   /* -------- Imagine (concepts) -------- */
   imagine: [
-    { slug: "slow-interfaces", title: "Slow Interfaces", description: "An exploration of software that intentionally resists urgency.",   image: "" },
-    { slug: "local-first",     title: "Local First",     description: "Notes on building apps that own their data before the cloud does.", image: "" },
-    { slug: "ambient-displays",title: "Ambient Displays", description: "Screens that inform at a glance without demanding attention.",     image: "" },
-    { slug: "calm-automation", title: "Calm Automation", description: "Letting scripts do quiet work so the desk stays clear.",           image: "" },
-    { slug: "jansport-outpost", title: "JanSport Outpost", description: "Carry your story. Find your Outpost.", image: "imagine/jansport-outpost/thumb.webp", url: "imagine/jansport-outpost/index.html" },
-    { slug: "jandorm", title: "JanDorm", description: "A compact stay for travelers who carry their world with them.", image: "imagine/jandorm/thumb.webp", url: "imagine/jandorm/index.html" }
+    {
+      slug: "slow-interfaces",
+      title: "Slow Interfaces",
+      description: "An exploration of software that intentionally resists urgency.",
+      image: "",
+    },
+    {
+      slug: "local-first",
+      title: "Local First",
+      description: "Notes on building apps that own their data before the cloud does.",
+      image: "",
+    },
+    {
+      slug: "ambient-displays",
+      title: "Ambient Displays",
+      description: "Screens that inform at a glance without demanding attention.",
+      image: "",
+    },
+    {
+      slug: "calm-automation",
+      title: "Calm Automation",
+      description: "Letting scripts do quiet work so the desk stays clear.",
+      image: "",
+    },
+    {
+      slug: "jansport-outpost",
+      title: "JanSport Outpost",
+      description: "Carry your story. Find your Outpost.",
+      image: "imagine/jansport-outpost/thumb.webp",
+      url: "imagine/jansport-outpost/index.html",
+    },
+    {
+      slug: "jandorm",
+      title: "JanDorm",
+      description: "A compact stay for travelers who carry their world with them.",
+      image: "imagine/jandorm/thumb.webp",
+      url: "imagine/jandorm/index.html",
+    },
   ],
 
   /* -------- Enjoy (ideas) -------- */
   enjoy: [
-    { slug: "the-reading-room", title: "The Reading Room", description: "A single-tab reader that hides everything but the words.",        image: "" },
-    { slug: "grid-journal",     title: "Grid Journal",     description: "One square per day, colored by how the day actually felt.",       image: "" },
-    { slug: "sound-of-places",  title: "Sound of Places",  description: "Field recordings mapped to the streets where they were made.",    image: "" },
-    { slug: "paper-radio",      title: "Paper Radio",      description: "A printable weekly digest generated from your own feeds.",        image: "" },
-    { slug: "events-museum", title: "The Unofficial Events Museum", description: "A walkable museum preserving past Roblox events and their artifacts.", image: "enjoy/events-museum/assets/museum-icon.webp", url: "enjoy/events-museum/index.html" },
-    { slug: "sky-sonnet", title: "Sky Sonnet", description: "Photograph the sky and get back a sonnet written for its color and mood.", image: "enjoy/sky-sonnet/thumbnail.svg", url: "enjoy/sky-sonnet/index.html" }
+    {
+      slug: "the-reading-room",
+      title: "The Reading Room",
+      description: "A single-tab reader that hides everything but the words.",
+      image: "",
+    },
+    {
+      slug: "grid-journal",
+      title: "Grid Journal",
+      description: "One square per day, colored by how the day actually felt.",
+      image: "",
+    },
+    {
+      slug: "sound-of-places",
+      title: "Sound of Places",
+      description: "Field recordings mapped to the streets where they were made.",
+      image: "",
+    },
+    {
+      slug: "paper-radio",
+      title: "Paper Radio",
+      description: "A printable weekly digest generated from your own feeds.",
+      image: "",
+    },
+    {
+      slug: "events-museum",
+      title: "The Unofficial Events Museum",
+      description: "A walkable museum preserving past Roblox events and their artifacts.",
+      image: "enjoy/events-museum/assets/museum-icon.webp",
+      url: "enjoy/events-museum/index.html",
+    },
+    {
+      slug: "sky-sonnet",
+      title: "Sky Sonnet",
+      description: "Photograph the sky and get back a sonnet written for its color and mood.",
+      image: "enjoy/sky-sonnet/thumbnail.svg",
+      url: "enjoy/sky-sonnet/index.html",
+    },
   ],
 
   /* -------- Digest (read / writing) -------- */
   digest: [
-    { slug: "field-notes",  title: "Field Notes",  description: "Short essays on making small, quiet software.", image: "" },
-    { slug: "reading-list", title: "Reading List", description: "Books and articles worth your time.",           image: "" }
+    {
+      slug: "field-notes",
+      title: "Field Notes",
+      description: "Short essays on making small, quiet software.",
+      image: "",
+    },
+    {
+      slug: "reading-list",
+      title: "Reading List",
+      description: "Books and articles worth your time.",
+      image: "",
+    },
   ]
 
 };
