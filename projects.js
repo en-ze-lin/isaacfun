@@ -64,9 +64,9 @@ window.MENU = [
    copy whenever you're ready.
    ============================================================= */
 window.SECTION_INTRO = {
-  use: "Lorem ipsum dolor sit amet, consectetur adipiscing elit — small tools built to solve one problem well.",
-  imagine: "Lorem ipsum dolor sit amet, consectetur adipiscing elit — concepts and ideas that haven't fully shipped yet.",
-  enjoy: "Lorem ipsum dolor sit amet, consectetur adipiscing elit — things made purely because they were fun to make."
+  use: "Practical or not, you can use them.",
+  imagine: "A collection of brand remix ideas, fictional concepts, and imaginary products created purely from my own ideas and imagination. These projects explore what certain products, collaborations, designs, or brand concepts could look like in an alternate universe. DISCLAIMER: These concepts are unofficial and NOT affiliated with, endorsed by, or connected to any real brand or company.",
+  enjoy: "A collection of fun and entertaining web pages from experiments and interactive tools to video game-related content. It includes a mix of small projects and simple experiences made mainly for entertainment."
 };
 
 
@@ -74,9 +74,7 @@ window.SITE = {
 
   /* -------- About page: one string per paragraph -------- */
   about: [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Isaac builds small tools, writes down loose concepts, and lets ideas sit until they are ready. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus, nulla gravida orci a odio."
+    "Welcome to my website, I’m En-Ze Lin, just another guy from Taiwan who enjoys building random things for fun, experimenting with different ideas, and turning concepts into actual projects. This website is a place where I share some of the things I make. More projects and updates are coming soon."
   ],
 
   /* -------- Use (tools) -------- */
@@ -186,7 +184,7 @@ window.SITE = {
       slug: "sky-sonnet",
       title: "Sky Sonnet",
       description: "Photograph the sky and get back a sonnet written for its color and mood.",
-      image: "enjoy/sky-sonnet/thumbnail.svg",
+      image: "enjoy/sky-sonnet/thumbnail.webp",
       url: "enjoy/sky-sonnet/index.html",
     },
   ],
