@@ -20,6 +20,7 @@ type poemRequest struct {
 	Color     string `json:"color"`
 	Emotion   string `json:"emotion"`
 	Style     string `json:"style"`
+	Format    string `json:"format"`
 	UserInput string `json:"userInput"`
 	Image     string `json:"image"`
 }
@@ -49,8 +50,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if input.Color == "" || input.Emotion == "" || input.Style == "" {
-		writeError(w, http.StatusBadRequest, "Missing color, emotion, or style")
+	if input.Color == "" || input.Emotion == "" || input.Style == "" || input.Format == "" {
+		writeError(w, http.StatusBadRequest, "Missing color, emotion, style, or format")
 		return
 	}
 
@@ -64,6 +65,18 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+// formatInstructions maps each selectable poem format to the phrase that
+// tells Gemini what shape/structure to write in. Falls back to the sonnet
+// phrasing for anything unrecognized so a stale/unknown value never breaks
+// generation.
+var formatInstructions = map[string]string{
+	"Sonnet":     "a 14-line rhymed sonnet",
+	"Haiku":      "a traditional haiku (5-7-5 syllables), short and evocative",
+	"Song Verse": "a song verse with a rhyme scheme like part of a song lyric — rhythmic and singable, rhyming lines the way a verse or chorus would",
+	"Ode":        "an ode that speaks directly to the sky, warm and reverent in tone",
+	"Ballad":     "a ballad — a flowing, rhymed narrative poem, like a traditional story-song",
+}
+
 func generatePoem(input poemRequest) (poem, error) {
 	metadata := extractImageMetadata(input.Image)
 
@@ -74,10 +87,16 @@ Photo context: %s.
 Use this to enrich the poem naturally. Never mention camera names or brands. The mood hint should shape the poem's tone (e.g. nostalgic, modern, retro). If a location is provided, reference it by name — weave the place into the imagery. The date can inform the season or time of day.`, metadata)
 	}
 
+	formatInstruction, ok := formatInstructions[input.Format]
+	if !ok {
+		formatInstruction = formatInstructions["Sonnet"]
+	}
+
 	prompt := fmt.Sprintf(
-		`Write a 14-line %s style sonnet inspired by the sky and the color %s, with a %s feeling.
+		`Write %s, in a %s style, inspired by the sky and the color %s, with a %s feeling.
 Include this request naturally: %s
 Use a color name rather than a hex code. Return only valid JSON with fields "title" and "poem".%s`,
+		formatInstruction,
 		input.Style,
 		input.Color,
 		input.Emotion,
