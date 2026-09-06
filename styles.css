@@ -261,10 +261,11 @@ a,
 }
 
 .page-title {
-  font-size: clamp(24px, 3.4vw, 34px);
+  font-size: clamp(20px, 3.4vw, 34px);
   font-weight: 700;
   letter-spacing: -0.5px;
   margin-bottom: 14px;
+  margin-top: 4px;
   text-transform: lowercase;
 }
 
