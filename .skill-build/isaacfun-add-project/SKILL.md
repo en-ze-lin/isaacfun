@@ -64,7 +64,7 @@ If a `.zip` is provided, unzip to a temp folder first.
    later swap for any other image.
 
 6. **Inject the back button** so the project can return to wherever the
-   visitor came from. It's a single fixed icon (the site logo, `favicon.png`)
+   visitor came from. It's a single fixed icon (the site logo, `nav-icon.png` — a transparent-background version kept separate from the gray-background `favicon.png` used for the browser tab icon)
    in the top-left corner with no text or arrow; clicking it calls
    `history.back()`, so it goes to the actual previous page (a section page,
    the homepage, search, etc.) rather than a hardcoded link:
