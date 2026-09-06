@@ -1,47 +1,40 @@
-/* =============================================================
-   styles.css  —  isaacfun.xyz  (typewriter / paper edition)
-   -------------------------------------------------------------
-   Paper background, ink-black text, monospace typewriter font.
-   Softly rounded corners and light shadows instead of hard 90s
-   edges — same quiet, print-like tone, just a little more
-   intentional about depth and spacing.
-
-   TABLE OF CONTENTS (search for these headers to jump around):
-     1. Design tokens (:root)      — colors, radius, shadow, font
-     2. Reset & base
-     3. Shell (#main)
-     4. Masthead + numbered index (home nav)
-     5. Page content (headings, about)
-     6. Section intro line
-     7. Project cards
-     8. Footer
-     9. Responsive
-   ============================================================= */
-
-/* ---------------- 1. Design tokens ---------------- */
 :root {
-  --bg:      #c9c9c9;   /* light gray "paper" */
-  --panel:   #bfbfbf;   /* cards */
-  --panel-2: #b3b3b3;   /* card hover */
-  --logo:    #ababab;   /* thumbnail placeholder */
-  --text:    #141414;   /* near-black ink */
-  --muted:   #555555;
-  --line:    rgba(20, 20, 20, .22);   /* soft edges (cards, code) */
-  --line-strong: #333333;             /* crisp hairlines (rules, nav) */
-  --font:    "Courier Prime", "Courier New", Courier, monospace;
-  --pad:     clamp(16px, 4vw, 40px);
+  --bg: #c9c9c9;
+  /* light gray "paper" */
+  --panel: #bfbfbf;
+  /* cards */
+  --panel-2: #b3b3b3;
+  /* card hover */
+  --logo: #ababab;
+  /* thumbnail placeholder */
+  --text: #141414;
+  /* near-black ink */
+  --muted: #555555;
+  --line: rgba(20, 20, 20, .22);
+  /* soft edges (cards, code) */
+  --line-strong: #333333;
+  /* crisp hairlines (rules, nav) */
+  --font: "Courier Prime", "Courier New", Courier, monospace;
+  --pad: clamp(16px, 4vw, 40px);
 
-  --radius:    14px;   /* cards */
-  --radius-sm: 8px;    /* logo squares, inline code */
-  --shadow:       0 1px 2px rgba(20, 20, 20, .06);
+  --radius: 14px;
+  /* cards */
+  --radius-sm: 8px;
+  /* logo squares, inline code */
+  --shadow: 0 1px 2px rgba(20, 20, 20, .06);
   --shadow-hover: 0 10px 24px rgba(20, 20, 20, .12);
   --ease: .16s ease;
 }
 
 /* ---------------- 2. Reset & base ---------------- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
@@ -52,11 +45,17 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: inherit; }
-a, .card, .idx-link, .site-title {
+a {
+  color: inherit;
+}
+
+a,
+.card,
+.idx-link,
+.site-title {
   transition: color var(--ease), background-color var(--ease),
-              border-color var(--ease), transform var(--ease),
-              box-shadow var(--ease);
+    border-color var(--ease), transform var(--ease),
+    box-shadow var(--ease);
 }
 
 /* ---------------- 3. Shell ---------------- */
@@ -68,9 +67,16 @@ a, .card, .idx-link, .site-title {
   padding: 48px var(--pad) 40px;
   text-align: center;
 }
+
 /* Home: nothing but the masthead, centered in the viewport */
-#main.is-home { justify-content: center; padding-top: var(--pad); }
-#main.is-home #app { display: none; }
+#main.is-home {
+  justify-content: center;
+  padding-top: var(--pad);
+}
+
+#main.is-home #app {
+  display: none;
+}
 
 /* ---------------- 4. Masthead + numbered index ---------------- */
 .masthead {
@@ -82,9 +88,19 @@ a, .card, .idx-link, .site-title {
 }
 
 /* Content pages: hide the numbered index; pin the title to the top-left. */
-#main:not(.is-home) { padding-top: 18px; }
-#main:not(.is-home) .masthead { align-items: flex-start; gap: 0; }
-#main:not(.is-home) .index { display: none; }
+#main:not(.is-home) {
+  padding-top: 18px;
+}
+
+#main:not(.is-home) .masthead {
+  align-items: flex-start;
+  gap: 0;
+}
+
+#main:not(.is-home) .index {
+  display: none;
+}
+
 #main:not(.is-home) .site-title {
   font-size: clamp(20px, 3vw, 26px);
   letter-spacing: -0.5px;
@@ -97,7 +113,10 @@ a, .card, .idx-link, .site-title {
   text-decoration: none;
   color: var(--text);
 }
-.site-title:hover { text-decoration: underline; }
+
+.site-title:hover {
+  text-decoration: underline;
+}
 
 /* The numbered index — the entire navigation (home only, VT323 pixel font) */
 .index {
@@ -107,6 +126,7 @@ a, .card, .idx-link, .site-title {
   gap: 6px;
   font-family: "VT323", "Courier Prime", monospace;
 }
+
 .idx-link {
   display: flex;
   align-items: baseline;
@@ -117,45 +137,124 @@ a, .card, .idx-link, .site-title {
   color: var(--muted);
   line-height: 1;
 }
-.idx-link .n { font-size: clamp(18px, 4vw, 24px); }
-.idx-link .t { font-size: clamp(26px, 7vw, 36px); letter-spacing: 1px; }
-.idx-link:hover { color: var(--text); background: rgba(20, 20, 20, .05); }
-.idx-link:hover .t { text-decoration: underline; }
+
+.idx-link .n {
+  font-size: clamp(18px, 4vw, 24px);
+}
+
+.idx-link .t {
+  font-size: clamp(26px, 7vw, 36px);
+  letter-spacing: 1px;
+}
+
+.idx-link:hover {
+  color: var(--text);
+  background: rgba(20, 20, 20, .05);
+}
+
+.idx-link:hover .t {
+  text-decoration: underline;
+}
 
 /* "Missing letter" reveal — default (mobile / no-hover) shows the full word. */
-.idx-link .masked { display: none; }
-.idx-link .full   { display: inline; }
+.idx-link .masked {
+  display: none;
+}
+
+.idx-link .full {
+  display: inline;
+}
 
 /* Only on devices that can actually hover (desktop) do we hide a letter and
    reveal the full word on hover. Same word is masked the same way every time. */
 @media (hover: hover) and (pointer: fine) {
-  .idx-link .masked { display: inline; }
-  .idx-link .full   { display: none; }
-  .idx-link:hover .masked { display: none; }
-  .idx-link:hover .full   { display: inline; }
+  .idx-link .masked {
+    display: inline;
+  }
+
+  .idx-link .full {
+    display: none;
+  }
+
+  .idx-link:hover .masked {
+    display: none;
+  }
+
+  .idx-link:hover .full {
+    display: inline;
+  }
 }
-.idx-link.active { color: var(--text); }
-.idx-link.active .t { text-decoration: underline; }
+
+.idx-link.active {
+  color: var(--text);
+}
+
+.idx-link.active .t {
+  text-decoration: underline;
+}
 
 /* Home: reveal the title first, then each row one by one */
-@keyframes rowIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-#main.is-home .site-title { animation: rowIn .5s ease-out both; }
-#main.is-home .idx-link    { animation: rowIn .5s ease-out both; }
-#main.is-home .idx-link:nth-child(1) { animation-delay: .18s; }
-#main.is-home .idx-link:nth-child(2) { animation-delay: .30s; }
-#main.is-home .idx-link:nth-child(3) { animation-delay: .42s; }
-#main.is-home .idx-link:nth-child(4) { animation-delay: .54s; }
-#main.is-home .idx-link:nth-child(5) { animation-delay: .66s; }
-#main.is-home .idx-link:nth-child(6) { animation-delay: .78s; }
-#main.is-home .idx-link:nth-child(7) { animation-delay: .90s; }
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+#main.is-home .site-title {
+  animation: rowIn .5s ease-out both;
+}
+
+#main.is-home .idx-link {
+  animation: rowIn .5s ease-out both;
+}
+
+#main.is-home .idx-link:nth-child(1) {
+  animation-delay: .18s;
+}
+
+#main.is-home .idx-link:nth-child(2) {
+  animation-delay: .30s;
+}
+
+#main.is-home .idx-link:nth-child(3) {
+  animation-delay: .42s;
+}
+
+#main.is-home .idx-link:nth-child(4) {
+  animation-delay: .54s;
+}
+
+#main.is-home .idx-link:nth-child(5) {
+  animation-delay: .66s;
+}
+
+#main.is-home .idx-link:nth-child(6) {
+  animation-delay: .78s;
+}
+
+#main.is-home .idx-link:nth-child(7) {
+  animation-delay: .90s;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  #main.is-home .site-title, #main.is-home .idx-link { animation: none; }
+
+  #main.is-home .site-title,
+  #main.is-home .idx-link {
+    animation: none;
+  }
 }
 
 /* ---------------- 5. Page content ---------------- */
 #app {
   width: 100%;
-  max-width: min(1680px, 92vw);   /* fill more of wide screens, keep margins */
+  max-width: min(1680px, 92vw);
+  /* fill more of wide screens, keep margins */
   margin: 26px auto 0;
   padding-top: 26px;
   border-top: 1px solid var(--line-strong);
@@ -168,11 +267,25 @@ a, .card, .idx-link, .site-title {
   margin-bottom: 14px;
   text-transform: lowercase;
 }
-.empty { color: var(--muted); font-size: 15px; }
+
+.empty {
+  color: var(--muted);
+  font-size: 15px;
+}
 
 /* About */
-.about { max-width: 680px; margin: 0 auto; }
-.about p { font-size: 16px; line-height: 1.8; margin-bottom: 18px; color: var(--text); }
+.about {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.about p {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 18px;
+  color: var(--text);
+}
+
 .about code {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -181,9 +294,19 @@ a, .card, .idx-link, .site-title {
   font-family: var(--font);
   font-size: 14px;
 }
-.back { margin-top: 24px; }
-.back a { color: var(--text); text-decoration: none; }
-.back a:hover { text-decoration: underline; }
+
+.back {
+  margin-top: 24px;
+}
+
+.back a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.back a:hover {
+  text-decoration: underline;
+}
 
 /* ---------------- 6. Section intro line ---------------- */
 /* One short line above a section's card grid (use / imagine / enjoy).
@@ -220,6 +343,7 @@ a, .card, .idx-link, .site-title {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
+
 .card:hover {
   background: var(--panel-2);
   border-color: var(--line-strong);
@@ -230,26 +354,50 @@ a, .card, .idx-link, .site-title {
 .card .logo {
   flex: 0 0 auto;
   width: 170px;
-  aspect-ratio: 1 / 1;     /* always a square; image scales in via cover */
+  aspect-ratio: 1 / 1;
+  /* always a square; image scales in via cover */
   align-self: flex-start;
   background: var(--logo) center / cover no-repeat;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 30px; font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 700;
   color: var(--muted);
   overflow: hidden;
 }
-.card .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.card .logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 .card .body {
   flex: 1;
-  display: flex; flex-direction: column; justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   min-width: 0;
 }
-.card .title { font-size: 17px; font-weight: 700; }
-.card:hover .title { text-decoration: underline; }
-.card .desc { font-size: 13px; line-height: 1.6; color: var(--muted); }
+
+.card .title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.card:hover .title {
+  text-decoration: underline;
+}
+
+.card .desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
 
 /* ---------------- 8. Footer ---------------- */
 #footer {
@@ -261,7 +409,15 @@ a, .card, .idx-link, .site-title {
 
 /* ---------------- 9. Responsive ---------------- */
 @media (max-width: 640px) {
-  .grid { grid-template-columns: 1fr; }
-  .card { min-height: 120px; }
-  .card .logo { width: 96px; }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: 120px;
+  }
+
+  .card .logo {
+    width: 96px;
+  }
 }
