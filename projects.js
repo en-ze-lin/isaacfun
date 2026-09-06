@@ -183,7 +183,7 @@ window.SITE = {
     {
       slug: "sky-sonnet",
       title: "Sky Sonnet",
-      description: "Photograph the sky and get back a sonnet written for its color and mood.",
+      description: "Turn a picture of a sky into a poem You can download a postcard as well.",
       image: "enjoy/sky-sonnet/thumbnail.webp",
       url: "enjoy/sky-sonnet/index.html",
     },
