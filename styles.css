@@ -200,8 +200,8 @@ a, .card, .idx-link, .site-title {
 /* ---------------- 7. Project cards ---------------- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 12px;
   width: 100%;
   margin: 0 auto;
 }
@@ -209,9 +209,9 @@ a, .card, .idx-link, .site-title {
 .card {
   display: flex;
   align-items: stretch;
-  gap: 16px;
-  min-height: 150px;
-  padding: 16px;
+  gap: 12px;
+  min-height: 170px;
+  padding: 12px;
   text-align: left;
   text-decoration: none;
   color: var(--text);
@@ -229,7 +229,7 @@ a, .card, .idx-link, .site-title {
 
 .card .logo {
   flex: 0 0 auto;
-  width: 120px;
+  width: 170px;
   aspect-ratio: 1 / 1;     /* always a square; image scales in via cover */
   align-self: flex-start;
   background: var(--logo) center / cover no-repeat;
