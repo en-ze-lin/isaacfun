@@ -136,14 +136,14 @@ window.SITE = {
       title: "JanSport Outpost",
       description: "Carry your story. Find your Outpost.",
       image: "imagine/jansport-outpost/thumb.webp",
-      url: "imagine/jansport-outpost/index.html",
+      url: "imagine/jansport-outpost",
     },
     {
       slug: "jandorm",
       title: "JanDorm",
       description: "A compact stay for travelers who carry their world with them.",
       image: "imagine/jandorm/thumb.webp",
-      url: "imagine/jandorm/index.html",
+      url: "imagine/jandorm",
     },
   ],
 
@@ -178,14 +178,14 @@ window.SITE = {
       title: "The Unofficial Events Museum",
       description: "A walkable museum preserving past Roblox events and their artifacts.",
       image: "enjoy/events-museum/assets/museum-icon.webp",
-      url: "enjoy/events-museum/index.html",
+      url: "enjoy/events-museum",
     },
     {
       slug: "sky-sonnet",
       title: "Sky Sonnet",
       description: "Turn a picture of a sky into a poem You can download a postcard as well.",
       image: "enjoy/sky-sonnet/thumbnail.webp",
-      url: "enjoy/sky-sonnet/index.html",
+      url: "enjoy/sky-sonnet",
     },
   ],
 
