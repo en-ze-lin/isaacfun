@@ -63,11 +63,16 @@ If a `.zip` is provided, unzip to a temp folder first.
    Remind the user the `image` field in `projects.js` is a plain path they can
    later swap for any other image.
 
-6. **Inject the shared navbar** so the project links back to the site. Pass the
-   section so the bar shows a prominent "&larr; Concepts" (etc.) back button:
-   `python3 scripts/inject_nav.py <site>/<section>/<slug>/index.html <section>`
-   It is idempotent (safe to re-run) and only touches a marked block — it does
-   not rewrite the user's own code or styles.
+6. **Inject the back button** so the project can return to wherever the
+   visitor came from. It's a single fixed icon (the site logo, `favicon.png`)
+   in the top-left corner with no text or arrow; clicking it calls
+   `history.back()`, so it goes to the actual previous page (a section page,
+   the homepage, search, etc.) rather than a hardcoded link:
+   `python3 scripts/inject_nav.py <site>/<section>/<slug>/index.html`
+   The optional trailing `[section]` argument still works for backward
+   compatibility but no longer changes anything — the button is identical
+   everywhere. It is idempotent (safe to re-run) and only touches a marked
+   block — it does not rewrite the user's own code or styles.
 
 7. **Update `projects.js`** — never hand-edit by string replacement:
    `python3 scripts/update_projects.py --site <site> --section <tools|concepts|ideas> --slug <slug> --title "<title>" --description "<desc>" --image "<section>/<slug>/thumbnail.png" [--overwrite]`
@@ -97,7 +102,7 @@ characters. Show it before saving.
 ## Scripts
 
 - `scripts/capture_thumbnail.py <project_html> <out_base>` — screenshot, else SVG monogram.
-- `scripts/inject_nav.py <project_html> [section]` — idempotently inject the back-to-site navbar (with a "&larr; Section" back button when section is given).
+- `scripts/inject_nav.py <project_html> [section]` — idempotently inject a single fixed "go back" icon button (site logo, `history.back()`) into a project page. The optional `section` argument is accepted for backward compatibility but no longer affects the output.
 - `scripts/update_projects.py --site … --section … --slug … --title … --description … --image … [--overwrite]` — append/replace an entry in `projects.js`.
 
 Run all with `python3`. Only the thumbnail screenshot path benefits from network/Playwright; every fallback works offline.

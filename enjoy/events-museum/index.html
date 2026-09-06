@@ -154,16 +154,17 @@
 </head>
 <body>
 <!-- isaacfun-nav:start -->
-<nav style="position:fixed;top:0;left:0;z-index:2147483000;display:flex;gap:16px;
-align-items:center;padding:8px 12px;background:rgba(201,201,201,0.92);
-border-right:1px solid #333;border-bottom:1px solid #333;
-font-family:'Courier Prime','Courier New',Courier,monospace;">
-  <a href="../../" style="color:#141414;text-decoration:none;font-size:14px;font-weight:700;"
-     onmouseover="this.style.textDecoration='underline'"
-     onmouseout="this.style.textDecoration='none'">isaacfun.xyz</a>
-  <a href="../../index.html?page=enjoy" style="color:#141414;text-decoration:none;font-size:14px;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">&larr; enjoy</a>
-</nav>
+<button type="button" onclick="history.back()" aria-label="Go back"
+  style="position:fixed;top:14px;left:14px;z-index:2147483000;
+  width:60px;height:60px;padding:0;margin:0;border:none;background:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0.92;transition:opacity .15s;"
+  onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.92'">
+  <img src="/favicon.png" alt="Back" style="width:100%;height:100%;object-fit:contain;display:block;" />
+</button>
 <!-- isaacfun-nav:end -->
+
+
 
   <header class="topbar">
     <div class="wrap nav">

@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""Inject a small shared navbar into a project's index.html.
+"""Inject a single "go back" icon button into a project's index.html.
 
-The project lives at <section>/<slug>/index.html, so the main site is two
-levels up. The injected bar links back to the site's pages and is wrapped
-in a marker comment so re-running the skill won't duplicate it.
-
-If a section is given (tools | concepts | ideas), a prominent
-"<- Section" back button is added on the left so visitors can return to
-the page the project came from in one click.
+Clicking it calls history.back() — it returns to whatever page the visitor
+actually came from (a section page, the homepage, search, etc.), not a
+hardcoded link. Wrapped in a marker comment so re-running the skill
+replaces the old one instead of duplicating it.
 
 Usage:
   python3 inject_nav.py <project_index_html> [section]
+
+The optional `section` argument is accepted for backward compatibility
+with existing callers but no longer changes the button — it's the same
+single icon everywhere now.
 """
 from __future__ import annotations
 
@@ -26,29 +27,19 @@ SECTIONS = ("use", "imagine", "enjoy", "digest")
 
 
 def build_nav(section: str | None = None) -> str:
-    """A minimal typewriter text link fixed to the top-left of the page.
-
-    No menu/drawer — just plain links back to the site, matching the main
-    site's paper/monospace look. Self-contained inline styles.
+    """A single fixed icon button (the site logo) that navigates back in
+    browser history. No text, no site-specific link — self-contained
+    inline styles so it works dropped into any project's markup.
     """
-    _base = ("color:#141414;text-decoration:none;font-size:14px;")
-    back = ""
-    if section in SECTIONS:
-        back = (f'<a href="../../index.html?page={section}" '
-                f'style="{_base}" '
-                f'onmouseover="this.style.textDecoration=\'underline\'" '
-                f'onmouseout="this.style.textDecoration=\'none\'">&larr; {section}</a>')
-
     return f"""{MARK_OPEN}
-<nav style="position:fixed;top:0;left:0;z-index:2147483000;display:flex;gap:16px;
-align-items:center;padding:8px 12px;background:rgba(201,201,201,0.92);
-border-right:1px solid #333;border-bottom:1px solid #333;
-font-family:'Courier Prime','Courier New',Courier,monospace;">
-  <a href="../../index.html" style="{_base}font-weight:700;"
-     onmouseover="this.style.textDecoration='underline'"
-     onmouseout="this.style.textDecoration='none'">isaacfun.xyz</a>
-  {back}
-</nav>
+<button type="button" onclick="history.back()" aria-label="Go back"
+  style="position:fixed;top:14px;left:14px;z-index:2147483000;
+  width:60px;height:60px;padding:0;margin:0;border:none;background:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0.92;transition:opacity .15s;"
+  onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.92'">
+  <img src="/favicon.png" alt="Back" style="width:100%;height:100%;object-fit:contain;display:block;" />
+</button>
 {MARK_CLOSE}"""
 
 
