@@ -80,28 +80,41 @@ var formatInstructions = map[string]string{
 func generatePoem(input poemRequest) (poem, error) {
 	metadata := extractImageMetadata(input.Image)
 
-	metadataSection := ""
-	if metadata != "" {
-		metadataSection = fmt.Sprintf(`
-Photo context: %s.
-Use this to enrich the poem naturally. Never mention camera names or brands. The mood hint should shape the poem's tone (e.g. nostalgic, modern, retro). If a location is provided, reference it by name — weave the place into the imagery. The date can inform the season or time of day.`, metadata)
-	}
-
 	formatInstruction, ok := formatInstructions[input.Format]
 	if !ok {
 		formatInstruction = formatInstructions["Sonnet"]
 	}
 
+	// context collects everything we actually know about the photo — the
+	// color/light analysis (computed client-side from real pixels), EXIF
+	// hints, and the writer's own words — so the prompt can point at it as
+	// one grounded scene instead of scattering it across adjectives.
+	var context strings.Builder
+	context.WriteString(fmt.Sprintf("Scene (from a color and light analysis of the actual photo, dominant color %s): %s", input.Color, input.Emotion))
+
+	if metadata != "" {
+		context.WriteString(fmt.Sprintf(`
+
+Photo context: %s. Let this shape tone, season, or time of day naturally — never mention camera names or brands. If a location is given, reference it by name.`, metadata))
+	}
+
+	if trimmedInput := strings.TrimSpace(input.UserInput); trimmedInput != "" {
+		context.WriteString(fmt.Sprintf(`
+
+The writer's own words about this moment — make this the poem's central image: %s`, trimmedInput))
+	}
+
 	prompt := fmt.Sprintf(
-		`Write %s, in a %s style, inspired by the sky and the color %s, with a %s feeling.
-Include this request naturally: %s
-Use a color name rather than a hex code. Return only valid JSON with fields "title" and "poem".%s`,
+		`Write %s, in a %s style.
+
+%s
+
+Ground the poem in the details above: use at least two concrete, specific images drawn directly from them (the colors, light quality, atmosphere, place, or time of day) rather than generic sky-poem phrases like "endless blue" or "gentle breeze". Do not invent specific objects, cloud shapes, birds, or landmarks that aren't named above — if none are given, focus on color, light, and mood instead.
+
+Use a color name rather than a hex code. Return only valid JSON with fields "title" and "poem".`,
 		formatInstruction,
 		input.Style,
-		input.Color,
-		input.Emotion,
-		input.UserInput,
-		metadataSection,
+		context.String(),
 	)
 
 	text, err := askGemini(prompt)
@@ -287,8 +300,13 @@ func askGemini(prompt string) (string, error) {
 			"role":  "user",
 			"parts": []any{map[string]string{"text": prompt}},
 		}},
-		"generationConfig": map[string]string{
+		"generationConfig": map[string]any{
 			"responseMimeType": "application/json",
+			// A bit above the model's default to favor more vivid, less
+			// clichéd word choice; maxOutputTokens gives longer forms
+			// (Ballad, Song Verse) enough room so they never get cut off.
+			"temperature":     0.95,
+			"maxOutputTokens": 800,
 		},
 	}
 	body, err := json.Marshal(payload)
