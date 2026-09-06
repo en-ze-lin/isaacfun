@@ -74,7 +74,7 @@ window.SITE = {
 
   /* -------- About page: one string per paragraph -------- */
   about: [
-    "Welcome to my website! I’m En-Ze Lin, just another guy from Taiwan who enjoys building random things for fun, experimenting with different ideas, and turning concepts into actual projects. This website is a place where I share some of the things I make. More projects and updates are coming soon. 歡迎來到我的網站！我是林恩澤。我喜歡出於興趣製作各種有趣的小玩意兒，嘗試各種天馬行空的點子。對我而言，將腦中的構想化虛為實、轉化為作品是最過癮的事。這個網站是我展示自己作品的地方，更多項目和動態即將發布。"
+    "Welcome to my website! I’m En-Ze Lin (Isaac), just another guy from Taiwan who enjoys building random things for fun, experimenting with different ideas, and turning concepts into actual projects. This website is a place where I share some of the things I make. More projects and updates are coming soon. 歡迎來到我的網站！我是林恩澤，喜歡出於興趣製作各種有趣的小玩意兒，嘗試各種天馬行空的點子。對我而言，將腦中的構想化虛為實、轉化為作品是最過癮的事。這個網站是我展示自己作品的地方，更多項目和動態即將發布。"
   ],
 
   /* -------- Use (tools) -------- */
