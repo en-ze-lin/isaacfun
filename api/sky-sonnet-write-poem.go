@@ -70,12 +70,25 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 // phrasing for anything unrecognized so a stale/unknown value never breaks
 // generation.
 var formatInstructions = map[string]string{
-	"Sonnet":     "a 14-line rhymed sonnet",
-	"Haiku":      "a traditional haiku (5-7-5 syllables), short and evocative",
-	"Song Verse": "a song verse with a rhyme scheme like part of a song lyric — rhythmic and singable, rhyming lines the way a verse or chorus would",
-	"Ode":        "an ode that speaks directly to the sky, warm and reverent in tone",
-	"Ballad":     "a ballad — a flowing, rhymed narrative poem, like a traditional story-song",
+	"Sonnet":     "a 14-line sonnet written in strict iambic pentameter (ten syllables a line, in an unstressed-stressed rhythm) with a traditional rhyme scheme (Shakespearean ABAB CDCD EFEF GG, or Petrarchan ABBAABBA CDECDE) — the meter should read naturally aloud, never forced or padded to fit",
+	"Haiku":      "a traditional haiku (5-7-5 syllables), short and evocative, built on one clear image with a quiet turn between its parts",
+	"Song Verse": "a song verse with a steady, singable rhythm and a clear rhyme scheme — built the way a verse or chorus is, with a natural stressed beat",
+	"Ode":        "an ode that speaks directly to the sky, warm and reverent in tone, with flowing, musical lines",
+	"Ballad":     "a ballad in traditional ballad meter — lines alternating four stresses and three (roughly 8 then 6 syllables), rhymed ABAB or ABCB, telling a small, flowing story",
 }
+
+// styleGuidance gives each selectable poem style its own instruction for
+// which poetic devices and register to lean on, so the same photo reads
+// differently depending on what the writer picked. Falls back to a general
+// nudge toward personification/metaphor for any unrecognized value.
+var styleGuidance = map[string]string{
+	"Dreamy":       "Lean soft and hazy: blur the edges between things, favor gentle uncertainty over sharp statement, and let one image drift into the next the way a half-remembered dream does.",
+	"Lifelike":     "Stay grounded and precise: plain, exact language and one or two true, specific sensory details do more work than any flourish — let the real scene carry the poem, not abstraction.",
+	"Scenographic": "Think in terms of staged scale and framing: wide establishing images, a shift of light like a scene change, a clear sense of foreground against background, as though the sky itself were set-dressed.",
+	"Imaginative":  "Let invention lead: give the sky and land some will or feeling of their own (personification), reach for one unexpected but earned comparison, and don't shy from a playful or surprising turn.",
+}
+
+const defaultStyleGuidance = "Give the sky and land a touch of personality — a hint of personification or one unexpected but earned comparison — without losing plain, human clarity."
 
 func generatePoem(input poemRequest) (poem, error) {
 	metadata := extractImageMetadata(input.Image)
@@ -83,6 +96,11 @@ func generatePoem(input poemRequest) (poem, error) {
 	formatInstruction, ok := formatInstructions[input.Format]
 	if !ok {
 		formatInstruction = formatInstructions["Sonnet"]
+	}
+
+	styleNote, ok := styleGuidance[input.Style]
+	if !ok {
+		styleNote = defaultStyleGuidance
 	}
 
 	// context collects everything we actually know about the photo — the
@@ -109,12 +127,17 @@ The writer's own words about this moment — make this the poem's central image:
 
 %s
 
+%s
+
 Ground the poem in the details above: use at least two concrete, specific images drawn directly from them (the colors, light quality, atmosphere, place, or time of day) rather than generic sky-poem phrases like "endless blue" or "gentle breeze". Do not invent specific objects, cloud shapes, birds, or landmarks that aren't named above — if none are given, focus on color, light, and mood instead.
+
+Write like a human poet, not a copywriter or an image-caption generator. Never use clinical or technical vocabulary — words like "hue," "saturation," "vivid," "contrast," or any other color-analysis language — as if labeling a palette. Avoid the handful of colors that read as stock AI-poem vocabulary (especially "azure" and "crimson") unless no truer word fits; reach for plainer or more specific color language instead (rust, dusk-blue, ash, ember, and the like). Beyond rhyme and meter, use at least one other poetic device — personification, metaphor, or a striking, earned comparison — wherever it fits naturally.
 
 Use a color name rather than a hex code. Return only valid JSON with fields "title" and "poem".`,
 		formatInstruction,
 		input.Style,
 		context.String(),
+		styleNote,
 	)
 
 	text, err := askGemini(prompt)
