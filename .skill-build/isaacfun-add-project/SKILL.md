@@ -67,7 +67,10 @@ If a `.zip` is provided, unzip to a temp folder first.
    visitor came from. It's a single fixed icon (the site logo, `nav-icon.png` — a transparent-background version kept separate from the gray-background `favicon.png` used for the browser tab icon)
    in the top-left corner with no text or arrow; clicking it calls
    `history.back()`, so it goes to the actual previous page (a section page,
-   the homepage, search, etc.) rather than a hardcoded link:
+   the homepage, search, etc.) rather than a hardcoded link. If the tab has
+   no history to go back to (opened directly via a bookmark, typed URL, or a
+   link that opened a new tab), it falls back to the homepage instead of
+   letting the browser fall through to its own New Tab page:
    `python3 scripts/inject_nav.py <site>/<section>/<slug>/index.html`
    The optional trailing `[section]` argument still works for backward
    compatibility but no longer changes anything — the button is identical
@@ -102,7 +105,7 @@ characters. Show it before saving.
 ## Scripts
 
 - `scripts/capture_thumbnail.py <project_html> <out_base>` — screenshot, else SVG monogram.
-- `scripts/inject_nav.py <project_html> [section]` — idempotently inject a single fixed "go back" icon button (site logo, `history.back()`) into a project page. The optional `section` argument is accepted for backward compatibility but no longer affects the output.
+- `scripts/inject_nav.py <project_html> [section]` — idempotently inject a single fixed "go back" icon button (site logo, `history.back()` with a homepage fallback when there's no history to go back to) into a project page. The optional `section` argument is accepted for backward compatibility but no longer affects the output.
 - `scripts/update_projects.py --site … --section … --slug … --title … --description … --image … [--overwrite]` — append/replace an entry in `projects.js`.
 
 Run all with `python3`. Only the thumbnail screenshot path benefits from network/Playwright; every fallback works offline.

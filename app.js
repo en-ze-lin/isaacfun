@@ -82,10 +82,18 @@
   // links — no data-spa — so they load normally, outside the SPA router.
   function card(slug, item) {
     const isReal = Boolean(item.url);
-    const href = item.url || `/${slug}/${item.slug}`;
+    // Both of these come out of projects.js as bare relative paths
+    // ("imagine/jandorm/", "enjoy/sky-sonnet/thumb.webp") with no leading
+    // slash. That's fine when the browser's current URL is "/", but this
+    // card can render on any section page ("/enjoy", "/enjoy/", etc.) —
+    // resolving a bare relative path against those doubles the segment
+    // (e.g. "/enjoy/enjoy/sky-sonnet/"). Always root them at "/" so they
+    // resolve the same way no matter what page is currently showing.
+    const href = item.url ? `/${item.url}` : `/${slug}/${item.slug}`;
+    const imageSrc = item.image ? `/${item.image}` : "";
     const spaAttr = isReal ? "" : "data-spa";
-    const logo = item.image
-      ? `<div class="logo"><img src="${item.image}" alt="" loading="lazy" decoding="async" onerror="this.closest('.logo').outerHTML='<div class=&quot;logo&quot;>${initials(item.title)}</div>'"></div>`
+    const logo = imageSrc
+      ? `<div class="logo"><img src="${imageSrc}" alt="" loading="lazy" decoding="async" onerror="this.closest('.logo').outerHTML='<div class=&quot;logo&quot;>${initials(item.title)}</div>'"></div>`
       : `<div class="logo">${initials(item.title)}</div>`;
     return `
       <a class="card" href="${href}" ${spaAttr}>

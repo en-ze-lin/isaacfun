@@ -3,7 +3,10 @@
 
 Clicking it calls history.back() — it returns to whatever page the visitor
 actually came from (a section page, the homepage, search, etc.), not a
-hardcoded link. Wrapped in a marker comment so re-running the skill
+hardcoded link. If the tab has no history to go back to (opened this page
+directly via a bookmark, typed URL, or a link that opened a new tab —
+history.length is 1), it falls back to the homepage instead of letting the
+browser fall through to its New Tab page. Wrapped in a marker comment so re-running the skill
 replaces the old one instead of duplicating it.
 
 Usage:
@@ -32,7 +35,7 @@ def build_nav(section: str | None = None) -> str:
     inline styles so it works dropped into any project's markup.
     """
     return f"""{MARK_OPEN}
-<button type="button" onclick="history.back()" aria-label="Go back"
+<button type="button" onclick="if (history.length > 1) {{ history.back() }} else {{ location.href = '/' }}" aria-label="Go back"
   style="position:fixed;top:14px;left:14px;z-index:2147483000;
   width:60px;height:60px;padding:0;margin:0;border:none;background:none;
   cursor:pointer;display:flex;align-items:center;justify-content:center;
