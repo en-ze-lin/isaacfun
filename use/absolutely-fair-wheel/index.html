@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absolutely Fair Wheel</title>
+<style>
+:root{--ink:#17212f;--muted:#788494;--line:#e6eaf0;--bg:#fff;--soft:#f7f9fc;--accent:#3665ee;--shadow:0 18px 48px rgba(25,45,80,.07)}*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #98b8ff;outline-offset:2px}.top{height:79px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(28px,calc((100vw - 1320px)/2));gap:15px}.brand{display:flex;align-items:center;font-size:18px;font-weight:800;letter-spacing:-.5px}.top-actions{display:flex;align-items:center;gap:10px}.plain{border:1px solid var(--line);background:white;border-radius:11px;padding:10px 15px;color:#45536a;font-weight:650}.plain:hover{background:var(--soft)}main{max-width:1560px;margin:0 auto;padding:28px 18px 28px}.intro{text-align:center;margin-bottom:33px}.intro h1{font-size:clamp(28px,4vw,40px);line-height:1.2;letter-spacing:-1.6px;margin:0 0 11px;font-weight:800}.intro p{color:var(--muted);margin:0}.layout{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(330px,0.85fr);gap:22px;align-items:start}.stage{min-width:0;display:flex;flex-direction:column;align-items:center}.wheel-wrap{width:min(100%,790px);aspect-ratio:1;position:relative;display:grid;place-items:center}.wheel-wrap canvas{width:100%;height:100%;filter:drop-shadow(0 18px 32px rgba(30,56,95,.18));}.pointer{position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:2;width:0;height:0;border-top:17px solid transparent;border-bottom:17px solid transparent;border-right:29px solid #1d293a;filter:drop-shadow(0 4px 10px rgba(29,41,58,.18))}.center-spin{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:1.5px solid rgba(255,255,255,.88);border-radius:100%;width:98px;height:98px;background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.5));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#203048;font-size:17px;font-weight:850;letter-spacing:.7px;box-shadow:0 10px 30px rgba(37,59,92,.18), inset 0 1px 0 rgba(255,255,255,.85), inset 0 -10px 20px rgba(255,255,255,.16);z-index:3}.center-spin:hover{background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,255,255,.58))}.center-spin:disabled{cursor:default;color:#8992a2}.result{margin:16px 0 0;min-height:37px;color:#516078;text-align:center;font-size:16px}.result strong{color:#21324b;font-size:21px}.footnote{color:#97a1ae;font-size:12px;text-align:center;margin:16px 0}.controls{display:flex;flex-direction:column;gap:18px}.panel{border:1px solid var(--line);border-radius:19px;background:#fff;padding:22px;box-shadow:var(--shadow)}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}.panel-head h2{font-size:17px;margin:0;letter-spacing:-.35px}.text-btn{border:0;background:none;color:#64768a;padding:5px 0}.text-btn:hover{color:#315ee1}.items{display:flex;flex-direction:column;gap:9px;max-height:280px;overflow:auto;padding:1px}.item{display:flex;align-items:center;gap:9px}.dot{width:13px;height:13px;flex:none;border-radius:5px}.choice-input{min-width:0;flex:1;border:1px solid #e2e7ed;border-radius:10px;padding:10px 12px;background:#fbfcff;color:#253044}.remove{border:0;background:#f5f7fa;color:#8793a1;border-radius:9px;width:34px;height:39px;font-size:19px}.remove:hover{background:#feecee;color:#cb4343}.add-form{display:flex;gap:9px;margin-top:16px}.add-form input{min-width:0;flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 12px}.primary{border:0;border-radius:11px;background:#3262eb;color:#fff;padding:10px 17px;font-weight:750}.primary:hover{background:#244ed0}.switches{display:flex;gap:5px;background:#f3f5f9;padding:5px;border-radius:12px;margin-bottom:15px}.switches button{flex:1;border:0;border-radius:9px;color:#677287;background:transparent;padding:10px 6px;font-size:13px;font-weight:700}.switches button.active{background:#fff;color:#223756;box-shadow:0 2px 6px #1e314214}.subtle{font-size:12px;color:#8892a2;margin:0 0 15px}.weight-row{display:grid;grid-template-columns:minmax(0,1fr) 64px 33px;column-gap:9px;align-items:center;margin-top:13px}.weight-row label{font-size:13px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.weight-row input{border:1px solid #e2e6ec;border-radius:8px;padding:7px 4px 7px 8px;min-width:0;width:100%;text-align:right}.weight-row span{font-size:12px;color:#788599}.info{font-size:12px;color:#91a0b1;margin-top:12px}.hidden{display:none!important}.empty{padding:12px;color:#94a0ad;text-align:center}.help{position:fixed;bottom:17px;right:19px;border:1px solid #e6eaf0;border-radius:12px;padding:9px 12px;background:white;color:#778499;font-size:12px;box-shadow:0 4px 22px #00000009}.kbd{border:1px solid #dbe1e8;border-bottom-width:2px;border-radius:5px;padding:1px 5px;color:#59697c;font-weight:700}@media(max-width:850px){.layout{grid-template-columns:1fr;gap:25px}.wheel-wrap{max-width:650px}.controls{width:min(100%,540px);margin:auto}main{padding:24px 14px}.top{padding:0 17px}.intro{margin-bottom:17px}}@media(max-width:470px){.brand{font-size:15px}.top{height:70px}.plain{padding:9px}.wheel-wrap{width:100%}.center-spin{width:72px;height:72px}.help{position:static;margin:10px auto;max-width:fit-content}.panel{padding:17px}}
+
+:root{--ink:#172334;--accent:#265ba2}.primary{background:#2059a6}.primary:hover{background:#174883}
+.center-spin{background:#ffffff;color:#1f2e44}.pointer{border-right-color:#202d42}
+.switches button{font-size:12px;padding:11px 3px}.switches button.active{color:#184a85}
+.shortcut-tip{margin:18px 0 0;padding:12px 13px;background:#f7f9fc;border:1px solid #e7ebf1;border-radius:10px;color:#59677a;font-size:12px;line-height:1.55}.shortcut-tip strong{color:#29394f}.field-label{display:block;font-size:13px;font-weight:650;margin-bottom:8px}
+#winnerPicker select{width:100%;padding:11px;background:#fbfcff;border:1px solid var(--line);border-radius:10px;color:var(--ink)}
+.mini-settings{position:fixed;right:19px;bottom:19px;z-index:10;background:#fff;color:#566376;border:1px solid #e0e5ec;border-radius:100px;padding:10px 15px;box-shadow:0 9px 32px #1b28471a;font-size:12px;font-weight:650;opacity:.72}.mini-settings:hover{opacity:1}
+@media(max-width:850px){.mini-settings{right:12px;bottom:12px}}
+
+.winner-message-field{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.winner-message-field label{display:block;font-size:13px;font-weight:700;color:#49586d;margin-bottom:7px}
+.winner-message-field input{width:100%;background:#fafbfd;border:1px solid #e0e6ed;padding:11px 13px;border-radius:10px;color:#243349}
+.winner-overlay{position:fixed;inset:0;z-index:100;background:rgba(17,29,47,.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:24px;animation:overlayAppear .25s ease both}
+.winner-card{background:#fff;border:1px solid #e8edf3;border-radius:25px;width:min(92vw,480px);padding:43px 32px 32px;text-align:center;box-shadow:0 28px 90px #0b1b3345;position:relative;z-index:2;animation:cardAppear .46s cubic-bezier(.18,.8,.25,1) both}
+.winner-heading{font-size:19px;color:#64748b;font-weight:650;margin:0 0 15px;overflow-wrap:anywhere}
+.winner-name{font-size:clamp(30px,6vw,49px);line-height:1.15;letter-spacing:-1.5px;font-weight:850;color:#1e344e;overflow-wrap:anywhere;margin:0 0 29px}
+.winner-close{min-width:145px;border:0;border-radius:12px;background:#2059a6;color:#fff;padding:13px 25px;font-weight:750}
+.winner-close:hover{background:#174883}
+.winner-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.winner-remove{min-width:145px;border:1px solid #e3b2b6;border-radius:12px;background:#fff4f4;color:#ad2e39;padding:13px 25px;font-weight:750}
+.winner-remove:hover{background:#ffe5e7}
+.confetti-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.confetti-piece{position:absolute;top:-12%;left:var(--x);width:var(--w);height:var(--h);background:var(--c);border-radius:2px;opacity:0;animation:confettiFall var(--d) linear var(--delay) forwards}
+@keyframes confettiFall{0%{transform:translate3d(0,-30px,0) rotate(0deg);opacity:0}8%{opacity:1}85%{opacity:1}100%{transform:translate3d(var(--drift),110vh,0) rotate(var(--rotation));opacity:0}}
+@keyframes overlayAppear{from{opacity:0}to{opacity:1}}
+@keyframes cardAppear{from{transform:translateY(20px) scale(.94);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+@media(prefers-reduced-motion:reduce){.confetti-piece{animation:none;display:none}.winner-card,.winner-overlay{animation:none}}
+
+/* Spacious large-wheel layout, with one prominent centered title. */
+.top{height:99px;position:relative;justify-content:flex-end;padding:0 24px}
+.header-title{position:absolute;left:50%;transform:translateX(-50%);margin:0;white-space:nowrap;text-align:center;font-size:clamp(27px,3.2vw,42px);font-weight:800;letter-spacing:-1.5px;line-height:1.15}
+.top-actions{z-index:1}
+main{max-width:1920px;padding:12px 16px 28px}
+.intro{margin-bottom:20px}
+.layout{grid-template-columns:minmax(0,1fr) minmax(335px,425px);gap:20px}
+.wheel-wrap{width:min(100%,900px,calc(100svh - 185px))}
+.center-spin{width:142px;height:142px;font-size:23px;border-width:2px}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.wheel-wrap{max-width:900px}.controls{width:min(100%,640px);margin:auto}}
+@media(max-width:650px){.wheel-wrap{width:min(100%,calc(100svh - 165px))}.center-spin{width:100px;height:100px;font-size:18px}.top{height:96px;align-items:flex-start;padding-top:12px}.header-title{top:13px;width:calc(100% - 24px);white-space:normal;font-size:clamp(23px,6vw,33px)}.top-actions{position:absolute;right:12px;bottom:8px}.intro{margin-top:3px;margin-bottom:10px}main{padding:10px 10px 24px}}
+</style>
+</head>
+<body>
+<!-- isaacfun-nav:start -->
+<button type="button" onclick="if (history.length > 1) { history.back() } else { location.href = '/' }" aria-label="Go back"
+  style="position:fixed;top:14px;left:14px;z-index:2147483000;
+  width:60px;height:60px;padding:0;margin:0;border:none;background:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0.92;transition:opacity .15s;"
+  onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.92'">
+  <img src="/nav-icon.png" alt="Back" style="width:100%;height:100%;object-fit:contain;display:block;" />
+</button>
+<!-- isaacfun-nav:end -->
+
+<header class="top"><h1 class="header-title">Absolutely Fair Wheel</h1><div class="top-actions"><button class="plain" id="toggleMenu">Hide menu</button></div></header>
+<main><div class="intro"><p>Add names, spin the wheel, and discover the result.</p></div>
+<div class="layout" id="layout"><section class="stage"><div class="wheel-wrap"><canvas id="wheel" width="1000" height="1000" aria-label="Spinning choice wheel"></canvas><div class="pointer" aria-hidden="true"></div><button class="center-spin" id="spin">SPIN</button></div><div class="result" id="result">Ready when you are.</div><div class="footnote">For games, decisions and entertainment.</div></section>
+<aside class="controls" id="controls"><div class="panel"><div class="panel-head"><h2>Choices <span id="choiceCount">(8)</span></h2><button class="text-btn" id="clear">Reset</button></div><div id="items" class="items"></div><form class="add-form" id="addForm"><input id="newChoice" maxlength="70" placeholder="Add a new choice" aria-label="New choice"><button type="button" id="addChoiceButton" class="primary">Add</button></form><p id="addStatus" class="info" role="status" aria-live="polite"></p><div class="winner-message-field"><label for="winnerMessage">Winner popup message</label><input id="winnerMessage" maxlength="150" value="We have a winner" aria-label="Winner popup message"></div></div><div class="panel"><div class="panel-head"><h2>Do not open</h2><button class="text-btn" id="toggleSettings">Hide</button></div><div id="settingsContent"><div class="switches"><button data-mode="fair" class="active">Equal</button><button data-mode="weighted">Custom</button><button data-mode="winner">Select winner</button></div><p class="subtle">Leave custom percentages blank to use equal chances. Enter any positive values to set relative odds automatically.</p><div id="weights" class="hidden"></div><div id="winnerPicker" class="hidden"><label class="field-label" for="forcedWinner">Chosen result</label><select id="forcedWinner"></select></div><p class="info" id="modeInfo">All choices have the same chance of winning.</p><p class="shortcut-tip"><strong>Tip:</strong> While the wheel spins fast, press the same letter or number <strong>five times</strong> to give matching names an equal chance of winning.</p></div></div></aside></div>
+</main><div id="winnerOverlay" class="winner-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="popupHeading" aria-describedby="popupWinner"><div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div><div class="winner-card"><p class="winner-heading" id="popupHeading">We have a winner</p><h2 class="winner-name" id="popupWinner"></h2><div class="winner-actions"><button class="winner-close" id="winnerClose" type="button">Continue</button><button class="winner-remove" id="winnerRemove" type="button">Remove</button></div></div></div><button class="mini-settings hidden" id="restoreSettings" type="button">Do not open <span aria-hidden="true">⌃</span></button>
+<script>
+(()=>{'use strict';
+const colors=['#b82f39','#d59e12','#16784c','#2059a6'];
+const defaultNames=['Amethyst','Blaze','Celeste','Ember','Luna','Onyx','Sage','Zephyr'];
+let lastWinnerId=null;let choices=defaultNames.map((name,i)=>({id:i+1,name,weight:''}));let queuedAdds=[];let nextId=5,mode='fair',angle=0,animation=null,keyRun='',presses=0,lastKeyTime=0,chosenId=3,idleLast=0;
+const $=id=>document.getElementById(id),canvas=$('wheel'),ctx=canvas.getContext('2d');
+const TAU=Math.PI*2, pointerAngle=0;
+const positiveWeights=()=>choices.map(c=>{const v=Number(c.weight);return c.weight.trim()!==''&&Number.isFinite(v)&&v>0?v:0});
+function probabilities(){const w=positiveWeights(),sum=w.reduce((a,b)=>a+b,0);return mode==='fair'||sum<=0?choices.map(()=>1/choices.length):w.map(v=>v/sum)}
+function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function draw(){
+ const n=choices.length;if(!n)return;
+ const N=1000,cx=500,cy=500,r=461,step=TAU/n;
+ ctx.clearRect(0,0,N,N);ctx.save();ctx.translate(cx,cy);
+ for(let i=0;i<n;i++){
+  const start=angle+i*step,end=start+step,mid=(start+end)/2;
+  ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r,start,end);ctx.closePath();
+  ctx.fillStyle=colors[i%colors.length];ctx.fill();
+  ctx.save();ctx.rotate(mid);ctx.textAlign='center';ctx.textBaseline='middle';
+  const fontSize=Math.max(22,Math.min(54,335/n+17));
+  ctx.font=`800 ${fontSize}px Inter,system-ui,sans-serif`;
+  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,.20)';ctx.shadowBlur=5;
+  const label=choices[i].name||'Untitled';let txt=label;
+  const maxWidth=r*.69;
+  if(ctx.measureText(txt).width>maxWidth){while(txt.length>1&&ctx.measureText(txt+'…').width>maxWidth)txt=txt.slice(0,-1);txt+='…'}
+  ctx.translate(r*.63,0);
+  ctx.fillText(txt,0,0);ctx.restore();
+ }
+ // Liquid-glass overlays across the entire wheel.
+ ctx.save();
+ ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.clip();
+ const gloss=ctx.createRadialGradient(-r*.28,-r*.38,r*.08,-r*.16,-r*.22,r*1.05);
+ gloss.addColorStop(0,'rgba(255,255,255,.46)');
+ gloss.addColorStop(.22,'rgba(255,255,255,.22)');
+ gloss.addColorStop(.45,'rgba(255,255,255,.08)');
+ gloss.addColorStop(.67,'rgba(255,255,255,0)');
+ gloss.addColorStop(1,'rgba(255,255,255,0)');
+ ctx.fillStyle=gloss;ctx.fillRect(-r,-r,r*2,r*2);
+ const shadowTint=ctx.createLinearGradient(-r*.9,-r*.7,r*.95,r*.95);
+ shadowTint.addColorStop(0,'rgba(255,255,255,.08)');
+ shadowTint.addColorStop(.48,'rgba(255,255,255,0)');
+ shadowTint.addColorStop(1,'rgba(9,18,31,.16)');
+ ctx.fillStyle=shadowTint;ctx.fillRect(-r,-r,r*2,r*2);
+ const bottomGlow=ctx.createLinearGradient(0,-r,0,r);
+ bottomGlow.addColorStop(0,'rgba(255,255,255,0)');
+ bottomGlow.addColorStop(.66,'rgba(255,255,255,0)');
+ bottomGlow.addColorStop(1,'rgba(255,255,255,.10)');
+ ctx.fillStyle=bottomGlow;ctx.fillRect(-r,-r,r*2,r*2);
+ ctx.restore();
+ // Translucent glass rim.
+ ctx.beginPath();ctx.arc(0,0,r-2,0,TAU);ctx.strokeStyle='rgba(255,255,255,.78)';ctx.lineWidth=6;ctx.stroke();
+ ctx.beginPath();ctx.arc(0,0,r-16,0,TAU);ctx.strokeStyle='rgba(255,255,255,.22)';ctx.lineWidth=14;ctx.stroke();
+ ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.strokeStyle='rgba(14,25,39,.08)';ctx.lineWidth=2;ctx.stroke();
+ ctx.restore();
+}
+function render(){const items=$('items'),weights=$('weights');items.innerHTML='';weights.innerHTML='';$('choiceCount').textContent=`(${choices.length})`;const p=probabilities();choices.forEach((choice,i)=>{const item=document.createElement('div');item.className='item';item.innerHTML=`<span class="dot" style="background:${colors[i%colors.length]}"></span><input class="choice-input" aria-label="Choice ${i+1}" maxlength="70" value="${escapeText(choice.name)}"><button class="remove" aria-label="Remove ${escapeText(choice.name)}" title="Remove choice">×</button>`;item.querySelector('input').addEventListener('input',e=>{choice.name=e.target.value;updateWeightsLabels();draw()});item.querySelector('button').onclick=()=>{if(choices.length<=1)return;choices=choices.filter(c=>c.id!==choice.id);render()};items.append(item);const row=document.createElement('div');row.className='weight-row';row.innerHTML=`<label>${escapeText(choice.name||'Untitled')}</label><input type="number" min="0" max="100000" step="any" placeholder="Auto" value="${escapeText(choice.weight)}" aria-label="Weight for ${escapeText(choice.name)}"><span>${Math.round(p[i]*100)}%</span>`;row.querySelector('input').addEventListener('input',e=>{choice.weight=e.target.value;updateWeightsLabels()});weights.append(row)});$('weights').classList.toggle('hidden',mode!=='weighted');$('winnerPicker').classList.toggle('hidden',mode!=='winner');const picker=$('forcedWinner');picker.innerHTML=choices.map(c=>`<option value="${c.id}">${escapeText(c.name||'Untitled')}</option>`).join('');if(!choices.some(c=>c.id===chosenId))chosenId=choices[0].id;picker.value=String(chosenId);updateWeightsLabels();draw()}
+function updateWeightsLabels(){let p=probabilities();Array.from($('weights').children).forEach((row,i)=>{row.querySelector('label').textContent=choices[i].name||'Untitled';row.querySelector('span').textContent=(p[i]*100).toFixed(p[i]*100<1?1:0)+'%'});$('modeInfo').textContent=mode==='fair'?'Every choice has the same probability.':mode==='winner'?'Spins stop on the selected name.':positiveWeights().some(v=>v>0)?'Custom values are normalized into winning probabilities.':'No values entered — equal chances apply.';if(mode==='winner'){const picker=$('forcedWinner');if(picker){const previously=picker.value;picker.innerHTML=choices.map(c=>`<option value="${c.id}">${escapeText(c.name||'Untitled')}</option>`).join('');picker.value=choices.some(c=>String(c.id)===previously)?previously:String(chosenId)}}}
+function selectIndex(){if(mode==='winner')return Math.max(0,choices.findIndex(c=>c.id===chosenId));const p=probabilities();let v=Math.random();for(let i=0;i<p.length;i++){v-=p[i];if(v<0)return i}return choices.length-1}
+const normalize=v=>((v%TAU)+TAU)%TAU;
+// Every segment has equal visual size. A chosen result is brought to the pointer at 3 o'clock,
+// but not always at the exact center of the slice. Instead, land at a random safe position inside it.
+function finalAngleFor(index,from,revolutions){
+ const step=TAU/choices.length;
+ const landingFraction=.18+Math.random()*.64; // avoid stopping too close to the slice edges
+ const target=normalize(-(index+landingFraction)*step);
+ const extra=normalize(target-normalize(from));
+ return from+TAU*revolutions+extra
+}
+function easeOutCubic(t){return 1-Math.pow(1-t,3)}
+function beginLanding(index,now,rapid){const startAngle=angle,endAngle=finalAngleFor(index,startAngle,rapid?5:6);animation={phase:'landing',index,start:now,from:startAngle,to:endAngle,duration:rapid?4400:4800};$('result').textContent='Spinning…'}
+function showWinner(name, winnerId){
+ lastWinnerId=winnerId;
+ $('popupHeading').textContent=$('winnerMessage').value.trim()||'We have a winner';
+ $('popupWinner').textContent=name||'Untitled';
+ const confetti=$('confettiLayer');confetti.replaceChildren();
+ const palette=['#b82f39','#d59e12','#16784c','#2059a6'];
+ for(let i=0;i<100;i++){
+  const piece=document.createElement('span');piece.className='confetti-piece';
+  const r=()=>Math.random();
+  piece.style.setProperty('--x',(r()*100).toFixed(2)+'%');
+  piece.style.setProperty('--w',(5+r()*8).toFixed(1)+'px');
+  piece.style.setProperty('--h',(8+r()*14).toFixed(1)+'px');
+  piece.style.setProperty('--c',palette[i%palette.length]);
+  piece.style.setProperty('--d',(2.8+r()*2.7).toFixed(2)+'s');
+  piece.style.setProperty('--delay',(r()*1.2).toFixed(2)+'s');
+  piece.style.setProperty('--drift',((r()-.5)*250).toFixed(0)+'px');
+  piece.style.setProperty('--rotation',((r()-.5)*1600).toFixed(0)+'deg');
+  confetti.append(piece);
+ }
+ $('winnerOverlay').classList.remove('hidden');
+ $('winnerClose').focus();
+}
+function hideWinner(){$('winnerOverlay').classList.add('hidden');$('confettiLayer').replaceChildren();$('spin').focus()}
+$('winnerClose').addEventListener('click',hideWinner);
+$('winnerRemove').addEventListener('click',()=>{
+ if(lastWinnerId!==null){
+  choices=choices.filter(c=>c.id!==lastWinnerId);
+  lastWinnerId=null;
+  if(choices.length){render();$('result').textContent='Winner removed from the wheel.'}
+  else {$('result').textContent='Add a choice to spin again.';ctx.clearRect(0,0,canvas.width,canvas.height)}
+ }
+ hideWinner();
+});
+$('winnerOverlay').addEventListener('click',e=>{if(e.target===$('winnerOverlay'))hideWinner()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('winnerOverlay').classList.contains('hidden'))hideWinner()});
+function idleLoop(now){
+ const delta=idleLast?(now-idleLast)/1000:0;
+ idleLast=now;
+ if(!animation && $('winnerOverlay').classList.contains('hidden') && choices.length){
+  angle+=delta*TAU*0.0085;
+  draw();
+ }
+ requestAnimationFrame(idleLoop);
+}
+function frame(now){if(!animation)return;const a=animation;if(a.phase==='fast'){const delta=(now-a.last)/1000;a.last=now;angle+=delta*TAU*2.3;draw();if(now-a.start>=3400){beginLanding(a.index,now,false)}requestAnimationFrame(frame);return}const t=Math.min(1,(now-a.start)/a.duration);angle=a.from+(a.to-a.from)*easeOutCubic(t);draw();if(t<1){requestAnimationFrame(frame)}else{const choice=choices[a.index];$('result').innerHTML=`Selected: <strong>${escapeText(choice?.name||'Untitled')}</strong>`;animation=null;$('spin').disabled=false;presses=0;showWinner(choice?.name,choice?.id);if(queuedAdds.length){choices.push(...queuedAdds);queuedAdds=[];render();$('addStatus').textContent='Choice added.'}}}
+function spin(){if(animation||choices.length<2)return;presses=0;keyRun='';$('spin').disabled=true;$('result').textContent='Spinning…';const now=performance.now();idleLast=now;animation={phase:'fast',start:now,last:now,index:selectIndex()};requestAnimationFrame(frame)}
+$('spin').onclick=spin;
+function addChoice(){
+ const input=$('newChoice'),name=input.value.trim();
+ if(!name){$('addStatus').textContent='Enter a choice name first.';input.focus();return}
+ const choice={id:nextId++,name,weight:''};
+ if(animation){queuedAdds.push(choice);$('addStatus').textContent='Choice queued until the spin ends.'}
+ else {choices.push(choice);render();$('addStatus').textContent='Added: '+name}
+ input.value='';input.focus();
+}
+$('addChoiceButton').addEventListener('click',addChoice);
+$('addForm').addEventListener('submit',e=>{e.preventDefault();addChoice()});
+$('newChoice').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addChoice()}});
+$('clear').onclick=()=>{if(animation)return;queuedAdds=[];$('addStatus').textContent='';choices=defaultNames.map((name,i)=>({id:i+1,name,weight:''}));nextId=5;chosenId=3;mode='fair';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode==='fair'));render()};
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{if(animation)return;mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));render()});
+function toggleMenu(){const hidden=$('controls').classList.toggle('hidden');$('toggleMenu').textContent=hidden?'Show menu':'Hide menu';$('layout').style.gridTemplateColumns=hidden?'1fr':''}
+$('toggleMenu').onclick=toggleMenu;
+$('forcedWinner').addEventListener('change',e=>{chosenId=Number(e.target.value)});
+function toggleSettings(){const panel=$('settingsContent').closest('.panel');const collapsed=panel.classList.toggle('collapsed');$('settingsContent').classList.toggle('hidden',collapsed);$('toggleSettings').textContent=collapsed?'Open':'Hide';$('restoreSettings').classList.toggle('hidden',!collapsed);if(collapsed)panel.classList.add('hidden');else panel.classList.remove('hidden')}
+$('toggleSettings').onclick=toggleSettings;$('restoreSettings').onclick=()=>{const p=$('settingsContent').closest('.panel');p.classList.remove('hidden');p.classList.remove('collapsed');$('settingsContent').classList.remove('hidden');$('toggleSettings').textContent='Hide';$('restoreSettings').classList.add('hidden');if($('controls').classList.contains('hidden'))toggleMenu()};
+document.addEventListener('keydown',e=>{
+ if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='h'){e.preventDefault();toggleMenu();return}
+ if(e.altKey||e.ctrlKey||e.metaKey||e.repeat||!animation||animation.phase!=='fast')return;
+ const el=document.activeElement;if(el&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.tagName==='SELECT'||el.isContentEditable))return;
+ if(e.key.length!==1||!/[a-z0-9]/i.test(e.key))return;
+ const character=e.key.toLowerCase(),now=performance.now();
+ if(keyRun===character&&now-lastKeyTime<=1300)presses++;else{keyRun=character;presses=1}
+ lastKeyTime=now;
+ if(presses>=5){
+   const matched=choices.map((c,i)=>c.name.toLowerCase().includes(character)?i:-1).filter(i=>i>=0);
+   // Matching entries are equiprobable, regardless of normal mode or custom weights.
+   if(matched.length){const index=matched[Math.floor(Math.random()*matched.length)];beginLanding(index,now,true)}
+   presses=0;keyRun='';
+ }
+});
+render();
+requestAnimationFrame(idleLoop);
+})();
+</script>
+</body></html>
