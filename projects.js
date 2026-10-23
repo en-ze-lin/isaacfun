@@ -106,7 +106,7 @@ window.SITE = {
     {
       slug: "absolutely-fair-wheel",
       title: "Absolutely Fair Wheel",
-      description: "A spin-the-wheel picker that is absolutely fair, unless you open the settings.",
+      description: "A wheel with custom settings.",
       image: "use/absolutely-fair-wheel/thumbnail.webp",
       url: "use/absolutely-fair-wheel/",
     },
