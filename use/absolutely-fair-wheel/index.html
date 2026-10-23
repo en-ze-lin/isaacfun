@@ -61,7 +61,7 @@ main{max-width:1920px;padding:12px 16px 28px}
 <header class="top"><h1 class="header-title">Absolutely Fair Wheel</h1><div class="top-actions"><button class="plain" id="toggleMenu">Hide menu</button></div></header>
 <main><div class="intro"><p>Add names, spin the wheel, and discover the result.</p></div>
 <div class="layout" id="layout"><section class="stage"><div class="wheel-wrap"><canvas id="wheel" width="1000" height="1000" aria-label="Spinning choice wheel"></canvas><div class="pointer" aria-hidden="true"></div><button class="center-spin" id="spin">SPIN</button></div><div class="result" id="result">Ready when you are.</div><div class="footnote">For games, decisions and entertainment.</div></section>
-<aside class="controls" id="controls"><div class="panel"><div class="panel-head"><h2>Choices <span id="choiceCount">(8)</span></h2><button class="text-btn" id="clear">Reset</button></div><div id="items" class="items"></div><form class="add-form" id="addForm"><input id="newChoice" maxlength="70" placeholder="Add a new choice" aria-label="New choice"><button type="button" id="addChoiceButton" class="primary">Add</button></form><p id="addStatus" class="info" role="status" aria-live="polite"></p><div class="winner-message-field"><label for="winnerMessage">Winner popup message</label><input id="winnerMessage" maxlength="150" value="We have a winner" aria-label="Winner popup message"></div></div><div class="panel"><div class="panel-head"><h2>Do not open</h2><button class="text-btn" id="toggleSettings">Hide</button></div><div id="settingsContent"><div class="switches"><button data-mode="fair" class="active">Equal</button><button data-mode="weighted">Custom</button><button data-mode="winner">Select winner</button></div><p class="subtle">Leave custom percentages blank to use equal chances. Enter any positive values to set relative odds automatically.</p><div id="weights" class="hidden"></div><div id="winnerPicker" class="hidden"><label class="field-label" for="forcedWinner">Chosen result</label><select id="forcedWinner"></select></div><p class="info" id="modeInfo">All choices have the same chance of winning.</p><p class="shortcut-tip"><strong>Tip:</strong> While the wheel spins fast, press the same letter or number <strong>five times</strong> to give matching names an equal chance of winning.</p></div></div></aside></div>
+<aside class="controls" id="controls"><div class="panel"><div class="panel-head"><h2>Choices <span id="choiceCount">(8)</span></h2><button class="text-btn" id="clear">Reset</button></div><div id="items" class="items"></div><form class="add-form" id="addForm"><input id="newChoice" maxlength="70" placeholder="Add a new choice" aria-label="New choice"><button type="button" id="addChoiceButton" class="primary">Add</button></form><p id="addStatus" class="info" role="status" aria-live="polite"></p><div class="winner-message-field"><label for="winnerMessage">Winner popup message</label><input id="winnerMessage" maxlength="150" value="We have a winner" aria-label="Winner popup message"></div></div><div class="panel"><div class="panel-head"><h2>Do not open</h2><button class="text-btn" id="toggleSettings">Hide</button></div><div id="settingsContent"><div class="switches"><button data-mode="fair" class="active">Equal</button><button data-mode="weighted">Custom</button><button data-mode="winner">Select winner</button></div><p class="subtle">Leave custom percentages blank to use equal chances. Enter any positive values to set relative odds automatically.</p><div id="weights" class="hidden"></div><div id="winnerPicker" class="hidden"><label class="field-label" for="forcedWinner">Chosen result</label><select id="forcedWinner"></select></div><p class="info" id="modeInfo">All choices have the same chance of winning.</p><p class="shortcut-tip"><strong>Tip:</strong> While the wheel spins fast, press the first letter or number of a name <strong>five times</strong> to give names starting with it an equal chance of winning.</p></div></div></aside></div>
 </main><div id="winnerOverlay" class="winner-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="popupHeading" aria-describedby="popupWinner"><div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div><div class="winner-card"><p class="winner-heading" id="popupHeading">We have a winner</p><h2 class="winner-name" id="popupWinner"></h2><div class="winner-actions"><button class="winner-close" id="winnerClose" type="button">Continue</button><button class="winner-remove" id="winnerRemove" type="button">Remove</button></div></div></div><button class="mini-settings hidden" id="restoreSettings" type="button">Do not open <span aria-hidden="true">⌃</span></button>
 <script>
 (()=>{'use strict';
@@ -132,7 +132,7 @@ function finalAngleFor(index,from,revolutions){
  return from+TAU*revolutions+extra
 }
 function easeOutCubic(t){return 1-Math.pow(1-t,3)}
-function beginLanding(index,now,rapid){const startAngle=angle,endAngle=finalAngleFor(index,startAngle,rapid?5:6);animation={phase:'landing',index,start:now,from:startAngle,to:endAngle,duration:rapid?4400:4800};$('result').textContent='Spinning…'}
+function beginLanding(index,now,rapid){const startAngle=angle,endAngle=finalAngleFor(index,startAngle,rapid?5:6);animation={phase:'landing',index,start:now,from:startAngle,to:endAngle,duration:rapid?4400:4800,rapid};$('result').textContent='Spinning…'}
 function showWinner(name, winnerId){
  lastWinnerId=winnerId;
  $('popupHeading').textContent=$('winnerMessage').value.trim()||'We have a winner';
@@ -178,7 +178,7 @@ function idleLoop(now){
  requestAnimationFrame(idleLoop);
 }
 function frame(now){if(!animation)return;const a=animation;if(a.phase==='fast'){const delta=(now-a.last)/1000;a.last=now;angle+=delta*TAU*2.3;draw();if(now-a.start>=3400){beginLanding(a.index,now,false)}requestAnimationFrame(frame);return}const t=Math.min(1,(now-a.start)/a.duration);angle=a.from+(a.to-a.from)*easeOutCubic(t);draw();if(t<1){requestAnimationFrame(frame)}else{const choice=choices[a.index];$('result').innerHTML=`Selected: <strong>${escapeText(choice?.name||'Untitled')}</strong>`;animation=null;$('spin').disabled=false;presses=0;showWinner(choice?.name,choice?.id);if(queuedAdds.length){choices.push(...queuedAdds);queuedAdds=[];render();$('addStatus').textContent='Choice added.'}}}
-function spin(){if(animation||choices.length<2)return;presses=0;keyRun='';$('spin').disabled=true;$('result').textContent='Spinning…';const now=performance.now();idleLast=now;animation={phase:'fast',start:now,last:now,index:selectIndex()};requestAnimationFrame(frame)}
+function spin(){if(animation||choices.length<2)return;const focused=document.activeElement;if(focused&&/^(INPUT|TEXTAREA|SELECT)$/.test(focused.tagName))focused.blur();presses=0;keyRun='';$('spin').disabled=true;$('result').textContent='Spinning…';const now=performance.now();idleLast=now;animation={phase:'fast',start:now,last:now,index:selectIndex()};requestAnimationFrame(frame)}
 $('spin').onclick=spin;
 function addChoice(){
  const input=$('newChoice'),name=input.value.trim();
@@ -198,21 +198,38 @@ $('toggleMenu').onclick=toggleMenu;
 $('forcedWinner').addEventListener('change',e=>{chosenId=Number(e.target.value)});
 function toggleSettings(){const panel=$('settingsContent').closest('.panel');const collapsed=panel.classList.toggle('collapsed');$('settingsContent').classList.toggle('hidden',collapsed);$('toggleSettings').textContent=collapsed?'Open':'Hide';$('restoreSettings').classList.toggle('hidden',!collapsed);if(collapsed)panel.classList.add('hidden');else panel.classList.remove('hidden')}
 $('toggleSettings').onclick=toggleSettings;$('restoreSettings').onclick=()=>{const p=$('settingsContent').closest('.panel');p.classList.remove('hidden');p.classList.remove('collapsed');$('settingsContent').classList.remove('hidden');$('toggleSettings').textContent='Hide';$('restoreSettings').classList.add('hidden');if($('controls').classList.contains('hidden'))toggleMenu()};
+// The five-press trick. Works while the wheel is spinning fast and during the first 70% of
+// the slow-down, accepts the key by what it types OR by its physical position (so a Chinese/
+// other IME or keyboard layout doesn't break it), and has no time limit between presses:
+// five presses of the same key in a row count, and a different key restarts the count.
+function pressedCharacter(e){
+ if(e.key&&e.key.length===1&&/[a-z0-9]/i.test(e.key))return e.key.toLowerCase();
+ const m=/^(?:Key([A-Z])|Digit([0-9])|Numpad([0-9]))$/.exec(e.code||'');
+ return m?(m[1]||m[2]||m[3]).toLowerCase():'';
+}
+function canRedirect(now){
+ if(!animation)return false;
+ if(animation.phase==='fast')return true;
+ return animation.phase==='landing'&&!animation.rapid&&(now-animation.start)/animation.duration<.7;
+}
 document.addEventListener('keydown',e=>{
  if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==='h'){e.preventDefault();toggleMenu();return}
- if(e.altKey||e.ctrlKey||e.metaKey||e.repeat||!animation||animation.phase!=='fast')return;
+ const now=performance.now();
+ if(e.altKey||e.ctrlKey||e.metaKey||e.repeat||!canRedirect(now))return;
  const el=document.activeElement;if(el&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.tagName==='SELECT'||el.isContentEditable))return;
- if(e.key.length!==1||!/[a-z0-9]/i.test(e.key))return;
- const character=e.key.toLowerCase(),now=performance.now();
- if(keyRun===character&&now-lastKeyTime<=1300)presses++;else{keyRun=character;presses=1}
+ const character=pressedCharacter(e);if(!character)return;
+ if(keyRun===character)presses++;else{keyRun=character;presses=1}
  lastKeyTime=now;
  if(presses>=5){
-   const matched=choices.map((c,i)=>c.name.toLowerCase().includes(character)?i:-1).filter(i=>i>=0);
+   const lower=choices.map(c=>c.name.trim().toLowerCase());
+   // Only names that START with the key count (z -> Zephyr, never Blaze).
+   const matched=lower.map((n,i)=>n.startsWith(character)?i:-1).filter(i=>i>=0);
    // Matching entries are equiprobable, regardless of normal mode or custom weights.
    if(matched.length){const index=matched[Math.floor(Math.random()*matched.length)];beginLanding(index,now,true)}
    presses=0;keyRun='';
  }
 });
+
 render();
 requestAnimationFrame(idleLoop);
 })();
