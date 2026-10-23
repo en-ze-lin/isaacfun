@@ -7,10 +7,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/rwcarlsen/goexif/exif"
@@ -32,10 +34,121 @@ type poem struct {
 
 var geminiClient = &http.Client{Timeout: 50 * time.Second}
 
+// Limits for the public endpoint. Every call costs a paid Gemini request, so
+// the handler checks the caller's origin, rate-limits per client address and
+// caps the size of every field before any work is done.
+const (
+	maxBodyBytes   = 10 << 20 // request body (the photo is sent as a base64 data URL)
+	maxImageChars  = 9 << 20
+	maxShortField  = 60   // color, style, format
+	maxEmotionChar = 800  // the client-side scene description
+	maxUserInput   = 1000 // the writer's own words
+
+	rateWindow = time.Minute
+	rateBurst  = 5 // requests per rateWindow per client
+	rateHourly = 30
+	maxTracked = 5000 // client entries kept in memory
+)
+
+// allowedHost reports whether a browser Origin/Referer host may call the API.
+func allowedHost(host string) bool {
+	host = strings.ToLower(host)
+	if h, _, err := net.SplitHostPort(host); err == nil {
+		host = h
+	}
+	switch host {
+	case "isaacfun.xyz", "www.isaacfun.xyz", "localhost", "127.0.0.1", "[::1]", "::1":
+		return true
+	}
+	return strings.HasSuffix(host, ".isaacfun.xyz") || strings.HasSuffix(host, ".vercel.app")
+}
+
+// originAllowed requires a same-site Origin (or, failing that, Referer).
+// Browsers always send Origin on a cross-origin JSON POST, so a missing or
+// foreign value means the request did not come from one of our pages.
+func originAllowed(r *http.Request) bool {
+	for _, header := range []string{"Origin", "Referer"} {
+		if v := r.Header.Get(header); v != "" {
+			u, err := url.Parse(v)
+			return err == nil && allowedHost(u.Host)
+		}
+	}
+	return false
+}
+
+// clientKey identifies the caller for rate limiting.
+func clientKey(r *http.Request) string {
+	for _, header := range []string{"X-Vercel-Forwarded-For", "X-Real-Ip", "X-Forwarded-For"} {
+		if v := strings.TrimSpace(strings.Split(r.Header.Get(header), ",")[0]); v != "" {
+			return v
+		}
+	}
+	if host, _, err := net.SplitHostPort(r.RemoteAddr); err == nil {
+		return host
+	}
+	return r.RemoteAddr
+}
+
+// limiter is a small in-memory sliding-window limiter. Serverless instances
+// do not share memory, so this is a per-instance safety net; add a Vercel
+// WAF rate-limit rule on /api/* for a hard global limit.
+type limiter struct {
+	mu   sync.Mutex
+	hits map[string][]time.Time
+}
+
+var poemLimiter = &limiter{hits: map[string][]time.Time{}}
+
+// allow records a request and returns (ok, secondsUntilRetry).
+func (l *limiter) allow(key string, now time.Time) (bool, int) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
+	if len(l.hits) > maxTracked { // drop stale entries before growing further
+		for k, ts := range l.hits {
+			if len(ts) == 0 || now.Sub(ts[len(ts)-1]) > time.Hour {
+				delete(l.hits, k)
+			}
+		}
+		if len(l.hits) > maxTracked {
+			l.hits = map[string][]time.Time{}
+		}
+	}
+
+	recent := l.hits[key][:0]
+	for _, t := range l.hits[key] {
+		if now.Sub(t) < time.Hour {
+			recent = append(recent, t)
+		}
+	}
+	inWindow := 0
+	var oldestInWindow time.Time
+	for _, t := range recent {
+		if now.Sub(t) < rateWindow {
+			if inWindow == 0 {
+				oldestInWindow = t
+			}
+			inWindow++
+		}
+	}
+	if inWindow >= rateBurst {
+		l.hits[key] = recent
+		return false, int(rateWindow.Seconds()-now.Sub(oldestInWindow).Seconds()) + 1
+	}
+	if len(recent) >= rateHourly {
+		l.hits[key] = recent
+		return false, int(time.Hour.Seconds()-now.Sub(recent[0]).Seconds()) + 1
+	}
+	l.hits[key] = append(recent, now)
+	return true, 0
+}
+
 // Handler is the Vercel serverless endpoint for POST /api/sky-sonnet-write-poem.
 // Backs the poem generator on the Sky Sonnet project card (enjoy/sky-sonnet).
 func Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
 
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
@@ -43,8 +156,19 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !originAllowed(r) {
+		writeError(w, http.StatusForbidden, "Forbidden")
+		return
+	}
+
+	if ok, retry := poemLimiter.allow(clientKey(r), time.Now()); !ok {
+		w.Header().Set("Retry-After", fmt.Sprint(retry))
+		writeError(w, http.StatusTooManyRequests, "Too many requests — please wait a moment and try again")
+		return
+	}
+
 	var input poemRequest
-	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 10<<20))
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, maxBodyBytes))
 	if err := decoder.Decode(&input); err != nil {
 		writeError(w, http.StatusBadRequest, "Invalid request")
 		return
@@ -52,6 +176,15 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	if input.Color == "" || input.Emotion == "" || input.Style == "" || input.Format == "" {
 		writeError(w, http.StatusBadRequest, "Missing color, emotion, style, or format")
+		return
+	}
+
+	// Cap lengths (in runes for text) so the prompt can't be stuffed or abused.
+	// Style/format are NOT whitelisted: unknown values fall back to defaults below.
+	if len([]rune(input.Color)) > maxShortField || len([]rune(input.Style)) > maxShortField ||
+		len([]rune(input.Format)) > maxShortField || len([]rune(input.Emotion)) > maxEmotionChar ||
+		len([]rune(input.UserInput)) > maxUserInput || len(input.Image) > maxImageChars {
+		writeError(w, http.StatusRequestEntityTooLarge, "Input too long")
 		return
 	}
 

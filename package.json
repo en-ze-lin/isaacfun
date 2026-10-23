@@ -1,0 +1,29 @@
+{
+  "name": "isaacfun",
+  "version": "2.0.0",
+  "private": true,
+  "description": "isaacfun.xyz \u2014 personal site of En-Ze Lin (Isaac)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && node tools/postbuild.mjs",
+    "typecheck": "tsc --noEmit",
+    "check": "node tools/check-site.mjs",
+    "preview": "node tools/preview.mjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@fontsource/courier-prime": "5.3.0",
+    "@fontsource/vt323": "5.3.0",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3"
+  }
+}
